@@ -1,0 +1,19 @@
+{
+  "name": "englandcoviddata",
+  "version": "1.0.0",
+  "description": "Data for England Covid-19 cases",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bhavesh Ghodasara",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "json-query": "^2.2.2",
+    "request": "^2.88.2"
+  }
+}
