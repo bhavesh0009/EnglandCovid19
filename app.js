@@ -21,9 +21,9 @@ app.get("/", function(req, res){
 
 app.get("/results", function(req, res){
     var query = req.query.postalCode;
-    var url = "http://api.postcodes.io/postcodes/" + query;
 //    ukData = JSON.parse(ukData)
-
+    query = query.replace(/\s/g, '');
+    var url = "http://api.postcodes.io/postcodes/" + query;
     request(url, function(error, response, body){
         if(!error && response.statusCode == 200){
             var data = JSON.parse(body);
