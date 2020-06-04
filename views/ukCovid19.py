@@ -63,6 +63,8 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
     ltlasDf['upperRegionMovingAverage7'] = ltlasDf.groupby('upperRegionCode')['dailyLabConfirmedCasesUpperRegion'].transform(lambda x: x.rolling(7, 1).mean())
     ltlasDf['regionMovingAverage7'] = ltlasDf.groupby('regionCode')['dailyLabConfirmedCasesRegion'].transform(lambda x: x.rolling(7, 1).mean())
 
+    ltlasDf = ltlasDf[ltlasDf.specimenDate>='2020-03-01']
+
     ltlasDf = ltlasDf.rename(
     columns={
         "dailyLabConfirmedCases" : "dcLower",
