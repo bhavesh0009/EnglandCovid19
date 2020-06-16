@@ -26,10 +26,12 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
+        <h1 id="resultsHead">Results Page</h1>
+
         <form action="/results" method='GET'>
             <div class="wrapReSearch">
                 <div class="search">
-                    <input type="text" class="searchTerm" placeholder="Enter your postal code." name="postalCode">
+                    <input type="text" class="searchTerm" placeholder="Search Again - Enter your postal code." name="postalCode">
                     <button type="submit" class="searchButton">
                         <i class="fa fa-search"></i>
                     </button>
@@ -37,9 +39,7 @@
             </div>
         </form>
 
-        <h1>Results Page</h1>
-
-
+        
         <div id="plotLower", margin-top:50% ></div>
         <div id="plotUpper" ></div>
         <div id="plotRegion" ></div>
@@ -60,14 +60,16 @@
                 ];
             var layout = {
               title:{
-                  text: 'Daily Trend of Covid-19 Postive Cases for Lower Local Authority : ' + areaNamePlt 
+                  text: 'Lower Local Authority : ' + areaNamePlt 
               },
               xaxis: {
                 title: 'Specimen Date',
-                type: 'date'
+                type: 'date',
+                tickangle: -75,
+                dtick: 86400000.0 * 7
               },
               yaxis: {
-                title: 'Number of Cases'
+                title: 'Number of Positive Cases'
               }
             }
             var config = {responsive: true}
@@ -86,14 +88,16 @@
                 ];
             var layout = {
               title:{
-                  text: 'Daily Trend of Covid-19 Postive Cases for Upper Local Authority : ' + upperNamePlt 
+                  text: 'Upper Local Authority : ' + upperNamePlt 
               },
               xaxis: {
                 title: 'Specimen Date',
-                type: 'date'
+                type: 'date',
+                tickangle: -75,
+                dtick: 86400000.0 * 7
               },
               yaxis: {
-                title: 'Number of Cases'
+                title: 'Number of Positive Cases'
               }
             }
             var config = {responsive: true}
@@ -112,14 +116,16 @@
                 ];
             var layout = {
               title:{
-                  text: 'Daily Trend of Covid-19 Postive Cases for Region : ' + regionNamePlt 
+                  text: 'Region : ' + regionNamePlt 
               },
               xaxis: {
                 title: 'Specimen Date',
-                type: 'date'
+                type: 'date',
+                tickangle: -75,
+                dtick: 86400000.0 * 7
               },
               yaxis: {
-                title: 'Number of Cases'
+                title: 'Number of Positive Cases'
               }
             }
             var config = {responsive: true}

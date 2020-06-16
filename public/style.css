@@ -54,7 +54,7 @@ body{
 .wrapReSearch{
   width: 30%;
   position: absolute;
-  top: 15%;
+  top: 5%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -74,3 +74,21 @@ body{
   font-size: small;
 }
 
+#plotLower{
+  margin-top: 5%;
+}
+
+#plotUpper{
+  margin-top: 5%;
+}
+
+#plotRegion{
+  margin-top: 5%;
+}
+
+#resultsHead{
+  width: 30%;
+  top: 0%;
+  left: 5%;
+  position: relative;
+}
