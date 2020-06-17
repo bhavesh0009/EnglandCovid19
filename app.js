@@ -18,6 +18,9 @@ app.get("/", function(req, res){
     res.render("index.ejs");
 });
 
+app.get("/resultsAsTable", function(req, res){
+    res.render("results_table.ejs");
+})
 
 app.get("/results", function(req, res){
     var query = req.query.postalCode;
