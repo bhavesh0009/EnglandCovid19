@@ -7,6 +7,9 @@
 <!--<![endif]-->
 
 <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170217326-1"></script>
     <script>
@@ -16,9 +19,6 @@
 
         gtag('config', 'UA-170217326-1');
     </script>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Engliand Covid-19 </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -63,9 +63,10 @@
     <div id="plotRegion"></div>
 
     <script>
-        var confirmedCasesPlt = [<% - confirmedCases %>];
+        var confirmedCasesPlt = [<%- confirmedCases %>];
         var specimenDatePlt = [];
         var areaNamePlt = "<%- areaName %>";
+
             <% for (var j = 0; j < specimenDate.length; j++) { %>
             specimenDatePlt.push('<%- specimenDate[j]%>');
             <%}%>
@@ -95,7 +96,7 @@
         Plotly.newPlot('plotLower', data1, layout, config);
 
         //code for upper region plotly
-        var upperConfirmedCasesPlt = [<% - upperConfirmedCases %>];
+        var upperConfirmedCasesPlt = [<%- upperConfirmedCases %>];
         var upperNamePlt = "<%- upperName %>";
         var data1 = [
             {
@@ -123,7 +124,7 @@
         Plotly.newPlot('plotUpper', data1, layout, config);
 
         //code for region plotly
-        var regionConfirmedCasesPlt = [<% - regionConfirmedCases %>];
+        var regionConfirmedCasesPlt = [<%- regionConfirmedCases %>];
         var regionNamePlt = "<%- regionName %>";
         var data1 = [
             {
@@ -147,7 +148,6 @@
             }
         }
         var config = { responsive: true }
-        console.log(regionConfirmedCasesPlt);
         Plotly.newPlot('plotRegion', data1, layout, config);                
     </script>
 </body>
