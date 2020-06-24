@@ -1,6 +1,8 @@
 import pandas as pd
 import requests
 import json
+from datetime import timedelta
+import numpy as np
 
 def getCasesData():
     request = requests.get("https://coronavirus.data.gov.uk/downloads/json/coronavirus-cases_latest.json")
@@ -63,6 +65,21 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
     ltlasDf['upperRegionMovingAverage7'] = ltlasDf.groupby('upperRegionCode')['dailyLabConfirmedCasesUpperRegion'].transform(lambda x: x.rolling(7, 1).mean())
     ltlasDf['regionMovingAverage7'] = ltlasDf.groupby('regionCode')['dailyLabConfirmedCasesRegion'].transform(lambda x: x.rolling(7, 1).mean())
 
+    ltlasSumDf = ltlasDf.groupby('areaCode')['dailyLabConfirmedCases'].sum().reset_index()
+    tmp = ltlasDf[ltlasDf.specimenDate > (ltlasDf.specimenDate.max() - timedelta(days=30))].groupby('areaCode')['dailyLabConfirmedCases'].sum()
+    ltlasSumDf['last30dCases'] = ltlasSumDf['areaCode'].map(tmp)
+    tmp = ltlasDf[(ltlasDf.specimenDate >= (ltlasDf.specimenDate.max() - timedelta(days=17))) & (ltlasDf.specimenDate <= (ltlasDf.specimenDate.max() - timedelta(days=4)))].groupby('areaCode')['dailyLabConfirmedCases'].sum()
+    tmp1 = ltlasDf[(ltlasDf.specimenDate >= (ltlasDf.specimenDate.max() - timedelta(days=31))) & (ltlasDf.specimenDate <= (ltlasDf.specimenDate.max() - timedelta(days=18)))].groupby('areaCode')['dailyLabConfirmedCases'].sum()
+    ltlasSumDf['rFirst14'] = ltlasSumDf['areaCode'].map(tmp)
+    ltlasSumDf['rSecond14'] = ltlasSumDf['areaCode'].map(tmp1)
+    ltlasSumDf['rBasic'] = np.round(ltlasSumDf['rFirst14'] /  ltlasSumDf['rSecond14'],2)
+    ltlasSumDf.dailyLabConfirmedCases = ltlasSumDf.dailyLabConfirmedCases.astype('int')
+    ltlasSumDf.last30dCases = ltlasSumDf.last30dCases.astype('int')
+    ltlasSumDf.rFirst14 = ltlasSumDf.rFirst14.astype('int')
+    ltlasSumDf.rSecond14= ltlasSumDf.rSecond14.astype('int')
+    ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].fillna(0)
+    ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].replace(np.inf, ltlasSumDf['rFirst14'])
+
     ltlasDf = ltlasDf[ltlasDf.specimenDate>='2020-03-01']
 
     ltlasDf = ltlasDf.rename(
@@ -80,15 +97,18 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
         "regionMovingAverage7" : "ma7Region"
         }
     )
-    return ltlasDf
+    return ltlasDf, ltlasSumDf
 
-def exportData(ltlasDf):
+def exportData(ltlasDf, ltlasSumDf):
+    ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json", orient="records", date_format='iso')
+    ltlasSumDf.to_csv('ltlasSum.csv')
+    ltlasSumDf.to_json(path_or_buf="data/ltlasSum.json", orient="records", date_format='iso')
 
 if __name__ == "__main__":
     ltlasDf = getCasesData()
     lowerToUpperDf, lowerToRegionDf = getGeoData()
-    ltlasDf = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf)
-    exportData(ltlasDf)
+    ltlasDf, ltlasSumDf = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf)
+    exportData(ltlasDf, ltlasSumDf)
 
 
