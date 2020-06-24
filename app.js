@@ -21,10 +21,6 @@ app.get("/", function (req, res) {
     res.render("new_index.ejs");
 });
 
-app.get("/resultsAsTable", function (req, res) {
-    res.render("results_table.ejs");
-})
-
 app.get("/results", function (req, res) {
     var query = req.query.postalCode;
     //    ukData = JSON.parse(ukData)
@@ -36,7 +32,6 @@ app.get("/results", function (req, res) {
             var adminDistrict = data["result"]["codes"]["admin_district"];
             var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
             var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
-            console.log(filteredSum);
             if (filtered.length > 0) {
                 let specimenDate = [];
                 let confirmedCases = [];
