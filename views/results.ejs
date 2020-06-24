@@ -7,7 +7,6 @@
 <!--<![endif]-->
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -19,10 +18,13 @@
 
         gtag('config', 'UA-170217326-1');
     </script>
+
+
     <title>Engliand Covid-19 </title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/images/favicon_virus.ico">
     <!-- Plotly.js -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -39,10 +41,6 @@
 </head>
 
 <body>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
     <h1 id="resultsHead">Results Page</h1>
 
     <form action="/results" method='GET'>
@@ -66,7 +64,6 @@
         var confirmedCasesPlt = [<%- confirmedCases %>];
         var specimenDatePlt = [];
         var areaNamePlt = "<%- areaName %>";
-
             <% for (var j = 0; j < specimenDate.length; j++) { %>
             specimenDatePlt.push('<%- specimenDate[j]%>');
             <%}%>

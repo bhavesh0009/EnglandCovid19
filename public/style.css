@@ -1,8 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
 body{
-  background-color: #eae7dc;
+  background-color: #264653;
   font-family: 'Open Sans', sans-serif;
+  height: 100%;
 }
 
 
@@ -71,7 +72,8 @@ body{
 .footnote{
   bottom: 5px;
   position: absolute;
-  font-size: small;
+  font-size: xx-small;
+  color: white;
 }
 
 #plotLower{
@@ -91,4 +93,41 @@ body{
   top: 0%;
   left: 5%;
   position: relative;
+}
+
+.jumbotron{
+  background-color: #2a9d8f;
+  margin-top: 15px;
+  color:#ffffff;
+}
+
+
+#basic-addon2{
+  background-color: #2a9d8f;
+  color:#ffffff;
+}
+
+#search-input{
+  display: flex;
+}
+
+
+#jumboContainerResults{
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+#regionTitle{
+  background-color: #2a9d8f;
+  color:#ffffff;
+}
+
+#mainCards{
+  background-color: #e76f51;
+  color:#ffffff;
+}
+
+#mainCardHeader{
+  background-color: #f4a261;
+  color: #000000;;
 }

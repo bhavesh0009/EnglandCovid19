@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-170217326-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-170217326-1');
+    </script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Engliand Covid-19</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/images/favicon_virus.ico">
+
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+    <section id="header">
+        <div class="container text-center" id="jumboContainer">
+            <div class="jumbotron mb-2" id="jumboContainerResults">
+                <h2>England Covid-19 Dashboard</h2>
+                <p class="mb-2">Daily trend of Covid-19 for your area.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="search-again">
+        <div class="container" id="result-search">
+            <form action="/results" method='GET'>
+                <div class="row d-flex justify-content-center" id="search-input">
+                    <div class="input-group mb-3 col-lg-6 col-11">
+                        <input type="text" class="form-control" placeholder="Search again with postal code."
+                            name="postalCode">
+                        <div class="input-group-append">
+
+                            <button type="submit" class="btn btn-default" id="basic-addon2">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    <div class="container">
+    <div class="card mb-2"  id="regionTitle">
+        <div class="card-body text-center">
+            <h4><%= areaName%></h4>
+        </div>
+      </div>
+    </div>
+    <section id="cards">
+        <div class="container-fluid content-row">
+            <div class="row">
+                <div class="col-lg-4 col-4 mb-1 pr-0">
+                    <div class="card h-100 border-dark" id="mainCards">
+                        <h5 class="card-header" id="mainCardHeader">
+                            Total Cases
+                        </h5>
+                        <img class="card-img-top" src="holder.js/100x180/" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title"><%= areaTotal%></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-4 mb-1 pr-0">
+                    <div class="card h-100 border-dark" id="mainCards">
+                        <h5 class="card-header" id="mainCardHeader">
+                            Last 30 days
+                        </h5>
+                        <img class="card-img-top" src="holder.js/100x180/" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title"><%= arealast30%></h4>
+                        </div>
+                    </div>
+                </div>                
+                <div class="col-lg-4 col-4 mb-1">
+                    <div class="card h-100 border-dark" id="mainCards">
+                        <h5 class="card-header text-align-center" id="mainCardHeader">
+                            Growth
+                        </h5>
+                        <img class="card-img-top" src="holder.js/100x180/" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title"><%= areaR%></h4>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </section>
+    <div class="container" id="plotLower"></div>
+     <script>
+        var confirmedCasesPlt = [<%- confirmedCases %>];
+        var specimenDatePlt = [];
+        var areaNamePlt = "<%- areaName %>";
+            <% for (var j = 0; j < specimenDate.length; j++) { %>
+            specimenDatePlt.push('<%- specimenDate[j]%>');
+            <%}%>
+            var data1 = [
+            {
+                x: specimenDatePlt,
+                y: confirmedCasesPlt,
+                type: 'bar',
+                marker: {
+                    color: "#ffffff"
+                }
+            }
+        ];
+        var layout = {
+            title: {
+                text: 'Lower Local Authority : ' + areaNamePlt
+            },
+            paper_bgcolor: "#2a9d8f",
+            plot_bgcolor: "#2a9d8f",
+            xaxis: {
+                title: 'Specimen Date',
+                type: 'date',
+                tickangle: -75,
+                dtick: 86400000.0 * 7
+            },
+            yaxis: {
+                title: 'Number of Positive Cases'
+            }
+        }
+        var config = { responsive: true }
+
+        Plotly.newPlot('plotLower', data1, layout, config);    
+    </script> 
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/cc2dc754fa.js" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
