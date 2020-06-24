@@ -3,7 +3,6 @@
 body{
   background-color: #264653;
   font-family: 'Open Sans', sans-serif;
-  height: 100%;
 }
 
 
@@ -123,11 +122,11 @@ body{
 }
 
 #mainCards{
-  background-color: #e76f51;
+  background-color: #b62400;
   color:#ffffff;
 }
 
 #mainCardHeader{
-  background-color: #f4a261;
+  background-color: #f3a692;
   color: #000000;;
 }
