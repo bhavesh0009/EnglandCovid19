@@ -18,7 +18,7 @@ app.use(express.static("public"));
 app.set('trust proxy', true);
 
 app.get("/", function (req, res) {
-    res.render("new_index.ejs");
+    res.render("index.ejs");
 });
 
 app.get("/results", function (req, res) {
@@ -51,7 +51,7 @@ app.get("/results", function (req, res) {
                 areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
                 arealast30 = filteredSum[0]['last30dCases'];
                 areaR = filteredSum[0]['rBasic'];
-                res.render("new_result_layout", {
+                res.render("results", {
                     specimenDate: specimenDate,
                     confirmedCases: confirmedCases,
                     areaName: areaName,
