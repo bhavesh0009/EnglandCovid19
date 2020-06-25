@@ -12,13 +12,26 @@ let ltlasJSON = JSON.parse(ltlasData);
 let ltlasSumData = fs.readFileSync('data/ltlasSum.json');
 let ltlasSumJSON = JSON.parse(ltlasSumData);
 
+let ltlastop10last30dData = fs.readFileSync('data/ltlastop10last30d.json');
+let ltlastop10last30dJSON = JSON.parse(ltlastop10last30dData);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.set('trust proxy', true);
 
 app.get("/", function (req, res) {
-    res.render("index.ejs");
+    let top10last30dArea = [];
+    let top10last30dCases = [];
+    for (i = 0; i < ltlastop10last30dJSON.length; i++) {
+        top10last30dArea.push(ltlastop10last30dJSON[i]['area_name']);
+        top10last30dCases.push(ltlastop10last30dJSON[i]['last30dCases']);
+    }
+
+    res.render("index.ejs", {
+        top10last30dArea : top10last30dArea,
+        top10last30dCases: top10last30dCases
+    });
 });
 
 app.get("/results", function (req, res) {
