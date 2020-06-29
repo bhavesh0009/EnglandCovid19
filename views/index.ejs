@@ -53,14 +53,33 @@
             </div>
         </form>
     </div>
-    
     <div class="container">
-        <footer class="footnote font-italic">1) Lab-confirmed case counts and rates for England and subnational areas are
+        <table class="table table-striped table-dark table-bordered text-center table-hover">
+        <caption>Top 10 Affected Areas</caption>
+            <thead>
+                <tr>
+                    <th>Area Name</th>
+                    <th>Growth Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% ltlasworst10JSON.forEach(function(town){ %>
+                <tr>
+                    <td scope="row"><%= town.areaName%></td>
+                    <td><%= town.rBasic%></td>
+                </tr>
+            </tbody>
+            <% }) %>
+        </table>
+        </div>    
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+          <span class="text-muted">1) Lab-confirmed case counts and rates for England and subnational areas are
             provided by Public Health England. All data for the rest of the UK are provided by the Department of Health 
             and Social Care based on data from the devolved administrations.
-            2) Cases information conains pillar-1 details only. 
-        </footer>
-    </div>
+            2) Cases information conains pillar-1 details only. </span>
+        </div>
+      </footer>    
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

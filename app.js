@@ -12,13 +12,18 @@ let ltlasJSON = JSON.parse(ltlasData);
 let ltlasSumData = fs.readFileSync('data/ltlasSum.json');
 let ltlasSumJSON = JSON.parse(ltlasSumData);
 
+let ltlasWorst10Data = fs.readFileSync('data/ltlasWorst10Df.json');
+let ltlasworst10JSON = JSON.parse(ltlasWorst10Data);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.set('trust proxy', true);
 
 app.get("/", function (req, res) {
-    res.render("index.ejs");
+    res.render("index.ejs", {
+        ltlasworst10JSON: ltlasworst10JSON,
+    });
 });
 
 app.get("/results", function (req, res) {
