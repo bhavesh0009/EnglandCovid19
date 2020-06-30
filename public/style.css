@@ -130,3 +130,16 @@ body{
   background-color: #f3a692;
   color: #000000;;
 }
+
+
+/* not active */
+.nav-pills .nav-link:not(.active) {
+  background-color: #343a40;
+  color: white;
+}
+
+/* active*/
+.nav-pills .nav-link.active {
+  background-color: #454d55;
+  color: white;
+}
