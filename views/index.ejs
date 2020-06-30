@@ -16,7 +16,8 @@
 
         gtag('config', 'UA-170217326-1');
     </script>
-    <script data-ad-client="ca-pub-3644243863892421" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script data-ad-client="ca-pub-3644243863892421" async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
@@ -54,32 +55,60 @@
         </form>
     </div>
     <div class="container">
-        <table class="table table-striped table-dark table-bordered text-center table-hover">
-        <caption>Top 10 Affected Areas</caption>
-            <thead>
-                <tr>
-                    <th>Area Name</th>
-                    <th>Growth Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% ltlasworst10JSON.forEach(function(town){ %>
-                <tr>
-                    <td scope="row"><%= town.areaName%></td>
-                    <td><%= town.rBasic%></td>
-                </tr>
-            </tbody>
-            <% }) %>
-        </table>
-        </div>    
+        <nav class="nav nav-pills nav-justified bg-dark" style="color: #ffffff;">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#nav-growth">Growth Rate</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-total">Total Cases(last 30 days)</a>
+        </nav>
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-growth">
+                <table class="table table-striped table-dark table-bordered text-center table-hover">
+                    <thead>
+                        <tr>
+                            <th>Area Name</th>
+                            <th>Growth Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% ltlasworst10JSON.forEach(function(town){ %>
+                        <tr>
+                            <td scope="row"><%= town.areaName%></td>
+                            <td><%= town.rBasic%></td>
+                        </tr>
+                    </tbody>
+                    <% }) %>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="nav-total">
+                <table class="table table-striped table-dark table-bordered text-center table-hover">
+                    <thead>
+                        <tr>
+                            <th>Area Name</th>
+                            <th>Total Cases</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% ltlastop10CasesJSON.forEach(function(town){ %>
+                        <tr>
+                            <td scope="row"><%= town.area_name%></td>
+                            <td><%= town.last30dCases%></td>
+                        </tr>
+                    </tbody>
+                    <% }) %>
+                </table>
+            </div>
+        </div>
+    </div>
     <footer class="footer mt-auto py-3">
         <div class="container">
-          <span class="text-muted">1) Lab-confirmed case counts and rates for England and subnational areas are
-            provided by Public Health England. All data for the rest of the UK are provided by the Department of Health 
-            and Social Care based on data from the devolved administrations.
-            2) Cases information conains pillar-1 details only. </span>
+            <span class="text-muted">
+                <ul>
+                    <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
+                    <li>All data on this website are based only on cases detected through pillar 1.</li>
+                    <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
+                </ul>
+            </span>
         </div>
-      </footer>    
+    </footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
