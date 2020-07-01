@@ -83,12 +83,12 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
 
     tmp = lowerToUpperDf[['LTLA19CD','LTLA19NM']].drop_duplicates()
     tmp = tmp.rename(columns={'LTLA19CD': 'areaCode','LTLA19NM': 'areaName'})
-    ltlasWorst10Df = pd.merge(
+    tmp = pd.merge(
     left=ltlasSumDf,
     right=tmp,
     how='left')
-    ltlasWorst10Df = ltlasWorst10Df[ltlasWorst10Df.rFirst14>=20][['areaName','rFirst14','rSecond14','rBasic']].sort_values(by='rBasic', ascending=False).head(10)
-
+    ltlasWorst10Df = tmp[tmp.rFirst14>=20][['areaName','rFirst14','rSecond14','rBasic']].sort_values(by='rBasic', ascending=False).head(10)
+    ltlastop10last30dDf = tmp[['areaName','last30dCases']].sort_values(by='last30dCases', ascending=False).head(10)
 
 
     ltlasDf = ltlasDf[ltlasDf.specimenDate>='2020-03-01']
@@ -108,20 +108,22 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
         "regionMovingAverage7" : "ma7Region"
         }
     )
-    return ltlasDf, ltlasSumDf, ltlasWorst10Df
+    return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf
 
-def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df):
+def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf):
     ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json", orient="records", date_format='iso')
     ltlasSumDf.to_csv('ltlasSum.csv')
     ltlasSumDf.to_json(path_or_buf="data/ltlasSum.json", orient="records", date_format='iso')
     ltlasWorst10Df.to_csv('ltlasWorst10Df.csv')
-    ltlasWorst10Df.to_json(path_or_buf="data/ltlasWorst10Df.json", orient="records", date_format='iso')    
+    ltlasWorst10Df.to_json(path_or_buf="data/ltlasWorst10Df.json", orient="records", date_format='iso')  
+    ltlastop10last30dDf.to_csv('ltlastop10last30dDf.csv')
+    ltlastop10last30dDf.to_json(path_or_buf="data/ltlastop10last30d.json", orient="records", date_format='iso')      
 
 if __name__ == "__main__":
     ltlasDf = getCasesData()
     lowerToUpperDf, lowerToRegionDf = getGeoData()
-    ltlasDf, ltlasSumDf, ltlasWorst10Df = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf)
-    exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df)
+    ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf)
+    exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf)
 
 
