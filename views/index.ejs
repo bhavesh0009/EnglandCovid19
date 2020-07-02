@@ -65,6 +65,8 @@
                     <thead>
                         <tr>
                             <th>Area Name</th>
+                            <th>Prior fortnight</th>
+                            <th>Latest fortnight</th>
                             <th>Growth Rate</th>
                         </tr>
                     </thead>
@@ -72,6 +74,8 @@
                         <% ltlasworst10JSON.forEach(function(town){ %>
                         <tr>
                             <td scope="row"><%= town.areaName%></td>
+                            <td><%= town.rSecond14%></td>
+                            <td><%= town.rFirst14%></td>
                             <td><%= town.rBasic%></td>
                         </tr>
                     </tbody>

@@ -87,7 +87,7 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
     left=ltlasSumDf,
     right=tmp,
     how='left')
-    ltlasWorst10Df = tmp[tmp.rFirst14>=20][['areaName','rFirst14','rSecond14','rBasic']].sort_values(by='rBasic', ascending=False).head(10)
+    ltlasWorst10Df = tmp[tmp.rFirst14>=30][['areaName','rFirst14','rSecond14','rBasic']].sort_values(by='rBasic', ascending=False).head(10)
     ltlastop10last30dDf = tmp[['areaName','last30dCases']].sort_values(by='last30dCases', ascending=False).head(10)
 
 
