@@ -11,8 +11,8 @@ def getCasesData():
     return ltlasDf
 
 def getGeoData():
-    lowerToUpperDf = pd.read_csv("data/Lower_Tier_Local_Authority_to_Upper_Tier_Local_Authority_(April_2019)_Lookup_in_England_and_Wales.csv")
-    lowerToRegionDf = pd.read_csv("data/Local_Authority_District_to_Region_(April_2019)_Lookup_in_England.csv")
+    lowerToUpperDf = pd.read_csv("data/Lower_Tier_Local_Authority_to_Upper_Tier_Local_Authority.csv")
+    lowerToRegionDf = pd.read_csv("data/Local_Authority_District_to_Region.csv")
     return lowerToUpperDf, lowerToRegionDf
 
 def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
