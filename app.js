@@ -18,6 +18,9 @@ let ltlasworst10JSON = JSON.parse(ltlasWorst10Data);
 let ltlastop10CasesData = fs.readFileSync('data/ltlastop10last30d.json');
 let ltlastop10CasesJSON = JSON.parse(ltlastop10CasesData);
 
+let ltlasWorst10Rate30Data = fs.readFileSync('data/ltlasWorst10RateLast30D.json');
+let ltlasWorst10Rate30JSON = JSON.parse(ltlasWorst10Rate30Data);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -26,7 +29,8 @@ app.set('trust proxy', true);
 app.get("/", function (req, res) {
     res.render("index.ejs", {
         ltlasworst10JSON: ltlasworst10JSON,
-        ltlastop10CasesJSON: ltlastop10CasesJSON
+        ltlastop10CasesJSON: ltlastop10CasesJSON,
+        ltlasWorst10Rate30JSON: ltlasWorst10Rate30JSON
     });
 });
 
