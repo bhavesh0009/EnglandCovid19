@@ -13,9 +13,10 @@ def getCasesData():
 def getGeoData():
     lowerToUpperDf = pd.read_csv("data/Lower_Tier_Local_Authority_to_Upper_Tier_Local_Authority.csv")
     lowerToRegionDf = pd.read_csv("data/Local_Authority_District_to_Region.csv")
-    return lowerToUpperDf, lowerToRegionDf
+    population = pd.read_csv("data/population.csv")
+    return lowerToUpperDf, lowerToRegionDf, population
 
-def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
+def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf, population):
     ltlasDf.specimenDate = pd.to_datetime(ltlasDf.specimenDate)
 
     ltlasDf = ltlasDf[['areaCode', 'areaName', 'specimenDate', 'dailyLabConfirmedCases', 'totalLabConfirmedCases']]
@@ -65,6 +66,19 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
     ltlasDf['upperRegionMovingAverage7'] = ltlasDf.groupby('upperRegionCode')['dailyLabConfirmedCasesUpperRegion'].transform(lambda x: x.rolling(7, 1).mean())
     ltlasDf['regionMovingAverage7'] = ltlasDf.groupby('regionCode')['dailyLabConfirmedCasesRegion'].transform(lambda x: x.rolling(7, 1).mean())
 
+    population.Area = population.Area.str.replace(',','').astype('int')
+    population.Population = population.Population.str.replace(',','').astype('int')
+    ltlasDf = pd.merge(
+                left=ltlasDf,
+                right=population,
+                how="left",
+                left_on="areaCode",
+                right_on="Code")
+    ltlasDf = ltlasDf.drop(['Code','Name'], axis=1)
+    ltlasDf['rate'] = (ltlasDf['dailyLabConfirmedCases'] / ltlasDf.Population) * 100000
+    ltlasWorst10RateLast30D = ltlasDf[ltlasDf.specimenDate > ltlasDf.specimenDate.max()- timedelta(days=30)].groupby(['areaName'])['rate'].sum().sort_values(ascending=False).head(10).reset_index()
+    ltlasWorst10RateLast30D.rate = np.round(ltlasWorst10RateLast30D.rate,1)
+
     ltlasSumDf = ltlasDf.groupby('areaCode')['dailyLabConfirmedCases'].sum().reset_index()
     tmp = ltlasDf[ltlasDf.specimenDate > (ltlasDf.specimenDate.max() - timedelta(days=30))].groupby('areaCode')['dailyLabConfirmedCases'].sum()
     ltlasSumDf['last30dCases'] = ltlasSumDf['areaCode'].map(tmp)
@@ -108,9 +122,9 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf):
         "regionMovingAverage7" : "ma7Region"
         }
     )
-    return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf
+    return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D
 
-def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf):
+def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D):
     ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json", orient="records", date_format='iso')
     ltlasSumDf.to_csv('ltlasSum.csv')
@@ -118,12 +132,14 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf):
     ltlasWorst10Df.to_csv('ltlasWorst10Df.csv')
     ltlasWorst10Df.to_json(path_or_buf="data/ltlasWorst10Df.json", orient="records", date_format='iso')  
     ltlastop10last30dDf.to_csv('ltlastop10last30dDf.csv')
-    ltlastop10last30dDf.to_json(path_or_buf="data/ltlastop10last30d.json", orient="records", date_format='iso')      
+    ltlastop10last30dDf.to_json(path_or_buf="data/ltlastop10last30d.json", orient="records", date_format='iso')
+    ltlasWorst10RateLast30D.to_csv('ltlasWorst10RateLast30D.csv')
+    ltlasWorst10RateLast30D.to_json(path_or_buf="data/ltlasWorst10RateLast30D.json", orient="records", date_format='iso')           
 
 if __name__ == "__main__":
     ltlasDf = getCasesData()
-    lowerToUpperDf, lowerToRegionDf = getGeoData()
-    ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf)
-    exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf)
+    lowerToUpperDf, lowerToRegionDf, population = getGeoData()
+    ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D = processData(ltlasDf, lowerToUpperDf, lowerToRegionDf, population)
+    exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf,ltlasWorst10RateLast30D)
 
 
