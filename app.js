@@ -21,6 +21,9 @@ let ltlastop10CasesJSON = JSON.parse(ltlastop10CasesData);
 let ltlasWorst10Rate30Data = fs.readFileSync('data/ltlasWorst10RateLast30D.json');
 let ltlasWorst10Rate30JSON = JSON.parse(ltlasWorst10Rate30Data);
 
+let ltlasAllSumDfData = fs.readFileSync('data/ltlasAllSumDf.json');
+let ltlasAllSumDfJSON = JSON.parse(ltlasAllSumDfData);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -33,6 +36,13 @@ app.get("/", function (req, res) {
         ltlasWorst10Rate30JSON: ltlasWorst10Rate30JSON
     });
 });
+
+app.get("/summary", function (req, res) {
+    res.render("summary.ejs", {
+        ltlasAllSumDfJSON: ltlasAllSumDfJSON
+    });
+});
+
 
 app.get("/results", function (req, res) {
     var query = req.query.postalCode;
