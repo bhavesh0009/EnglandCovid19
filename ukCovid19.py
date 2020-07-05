@@ -128,6 +128,7 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf, population):
     ltlasAllSumDf['rFirst14'] = np.round(ltlasAllSumDf['rFirst14'], 1)
     ltlasAllSumDf['rSecond14'] = np.round(ltlasAllSumDf['rSecond14'], 1)
     ltlasAllSumDf['relativeDiff'] = np.round(ltlasAllSumDf['relativeDiff'], 1)
+    ltlasAllSumDf['rBasic'] = np.round(ltlasAllSumDf['rBasic'], 1)    
 
     ltlasWorst10RateLast30D = ltlasDf[ltlasDf.specimenDate > ltlasDf.specimenDate.max(
     ) - timedelta(days=30)].groupby(['areaName'])['rate'].sum().sort_values(ascending=False).head(10).reset_index()

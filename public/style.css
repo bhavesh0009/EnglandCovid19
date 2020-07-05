@@ -159,3 +159,8 @@ table.dataTable tbody tr{
 .dataTables_wrapper .dataTables_paginate .paginate_button{
   color: white !important;
 }
+
+#example{
+  border-collapse: collapse !important;
+  background-color: #343a40;
+}
