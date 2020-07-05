@@ -111,11 +111,14 @@
     <div class="container my-3" id="plotLower"></div>
      <script>
         var confirmedCasesPlt = [<%- confirmedCases %>];
+        var ma7LowerPlt = [<%- ma7Lower %>];
+        ma7LowerPlt = ma7LowerPlt.slice(0, ma7LowerPlt.length - 5);
         var specimenDatePlt = [];
         var areaNamePlt = "<%- areaName %>";
             <% for (var j = 0; j < specimenDate.length; j++) { %>
             specimenDatePlt.push('<%- specimenDate[j]%>');
             <%}%>
+
             var data1 = [
             {
                 x: specimenDatePlt,
@@ -123,8 +126,19 @@
                 type: 'bar',
                 marker: {
                     color: "#ffffff"
-                }
+                },
+                name: 'Daily Cases'
+            },
+            {
+                x: specimenDatePlt,
+                y: ma7LowerPlt,
+                type: 'scatter',
+                marker: {
+                    color: "#000000"
+                },
+                name: '7 Days Moving Average'
             }
+
         ];
         var layout = {
             title: {

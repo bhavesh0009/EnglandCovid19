@@ -58,14 +58,14 @@ app.get("/results", function (req, res) {
             if (filtered.length > 0) {
                 let specimenDate = [];
                 let confirmedCases = [];
-                let upperConfirmedCases = [];
+                let ma7Lower = [];
                 let regionConfirmedCases = [];
                 for (i = 0; i < filtered.length; i++) {
                     date = new Date(filtered[i]['specimenDate'])
                     date = date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2));
                     specimenDate.push(date);
                     confirmedCases.push(filtered[i]['dcLower']);
-                    upperConfirmedCases.push(filtered[i]['dcUpper']);
+                    ma7Lower.push(filtered[i]['ma7Lower']);
                     regionConfirmedCases.push(filtered[i]['dcRegion']);
                 }
                 areaName = filtered[0]['areaName'];
@@ -80,11 +80,11 @@ app.get("/results", function (req, res) {
                     areaName: areaName,
                     upperName: upperName,
                     regionName: regionName,
-                    upperConfirmedCases: upperConfirmedCases,
                     regionConfirmedCases: regionConfirmedCases,
                     areaTotal: areaTotal,
                     arealast30: arealast30,
-                    areaR: areaR
+                    areaR: areaR,
+                    ma7Lower: ma7Lower
                 });
             }
             else {
