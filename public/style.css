@@ -119,6 +119,13 @@ body{
 #regionTitle{
   background-color: #2a9d8f;
   color:#ffffff;
+  border-color:  #2a9d8f;
+}
+
+#btn-link-summary{
+  background-color: #2a9d8f;
+  color:#ffffff;
+  border-color: #2a9d8f;
 }
 
 #mainCards{
