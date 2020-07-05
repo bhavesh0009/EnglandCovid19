@@ -33,6 +33,13 @@
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
+    <nav class="navbar navbar-expand navbar-light bg-light">
+        <div class="nav navbar-nav">
+            <a class="nav-item nav-link active" href="/">Home<span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/">Results</a>
+            <a class="nav-item nav-link" href="/summary">Summary </a>
+        </div>
+    </nav>
     <div class="container" id="jumboContainer">
         <div class="jumbotron">
             <h1 class="display-5">England Covid-19 Dashboard</h1>
@@ -118,9 +125,16 @@
                     </tbody>
                     <% }) %>
                 </table>
-            </div>            
+            </div>
         </div>
     </div>
+    <div class="container">
+        <div class="d-flex flex-row-reverse">
+            <a href=" /summary" type="button" class="btn btn-primary" id="btn-link-summary">Click Here To View All
+                Areas</a>        
+        </div>
+    </div>
+
     <footer class="footer mt-auto py-3">
         <div class="container">
             <span class="text-muted">
