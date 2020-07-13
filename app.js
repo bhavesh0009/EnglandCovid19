@@ -24,6 +24,9 @@ let ltlasWorst10Rate30JSON = JSON.parse(ltlasWorst10Rate30Data);
 let ltlasAllSumDfData = fs.readFileSync('data/ltlasAllSumDf.json');
 let ltlasAllSumDfJSON = JSON.parse(ltlasAllSumDfData);
 
+let lastRefresh = fs.readFileSync('data/lastRefresh.json');
+let lastRefreshJSON = JSON.parse(lastRefresh);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -33,7 +36,8 @@ app.get("/", function (req, res) {
     res.render("index.ejs", {
         ltlasworst10JSON: ltlasworst10JSON,
         ltlastop10CasesJSON: ltlastop10CasesJSON,
-        ltlasWorst10Rate30JSON: ltlasWorst10Rate30JSON
+        ltlasWorst10Rate30JSON: ltlasWorst10Rate30JSON,
+        lastRefreshJSON: lastRefreshJSON
     });
 });
 
@@ -96,6 +100,10 @@ app.get("/results", function (req, res) {
         }
     }
     );
+});
+
+app.get("/search", function(req, res){
+    res.render("testSearch");
 });
 
 app.get("*", function (req, res) {

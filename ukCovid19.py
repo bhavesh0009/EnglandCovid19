@@ -10,7 +10,8 @@ def getCasesData():
         "https://coronavirus.data.gov.uk/downloads/json/coronavirus-cases_latest.json")
     requestJson = json.loads(request.content)
     ltlasDf = pd.DataFrame(requestJson['ltlas'])
-    return ltlasDf
+    lastRefresh = pd.DataFrame(requestJson['metadata'], index=[0])
+    return ltlasDf, lastRefresh
 
 
 def getGeoData():
@@ -187,7 +188,7 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf, population):
     return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf
 
 
-def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf):
+def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh):
     ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json",
                     orient="records", date_format='iso')
@@ -206,12 +207,14 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWo
     ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
     ltlasAllSumDf.to_json(
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
+    lastRefresh.to_json(
+        path_or_buf="data/lastRefresh.json" , orient="records", date_format='iso')
 
 
 if __name__ == "__main__":
-    ltlasDf = getCasesData()
+    ltlasDf, lastRefresh = getCasesData()
     lowerToUpperDf, lowerToRegionDf, population = getGeoData()
     ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf = processData(
         ltlasDf, lowerToUpperDf, lowerToRegionDf, population)
     exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df,
-               ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf)
+               ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh)
