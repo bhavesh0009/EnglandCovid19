@@ -1,4 +1,5 @@
 import pandas as pd
+from uk_covid19 import Cov19API
 import requests
 import json
 from datetime import timedelta
@@ -6,11 +7,28 @@ import numpy as np
 
 
 def getCasesData():
+    '''
     request = requests.get(
         "https://coronavirus.data.gov.uk/downloads/json/coronavirus-cases_latest.json")
     requestJson = json.loads(request.content)
     ltlasDf = pd.DataFrame(requestJson['ltlas'])
     lastRefresh = pd.DataFrame(requestJson['metadata'], index=[0])
+    '''
+    ltla_filter = ['areaType=ltla']
+    cases_and_deaths = {
+                        "areaType":"areaType"
+                        ,"areaName":"areaName"
+                        ,"areaCode":"areaCode"
+                        ,"specimenDate":"date"
+                        ,"dailyLabConfirmedCases":"newCasesBySpecimenDate"
+                        ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
+                        }
+    api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
+    data = api.get_json()  # Returns a dictionary                        
+    lastUpdate = data['lastUpdate']
+    lastRefresh = [{"lastUpdatedAt": lastUpdate}]
+    lastRefresh = pd.DataFrame(lastRefresh)
+    ltlasDf = pd.DataFrame(data['data'])
     return ltlasDf, lastRefresh
 
 
@@ -76,6 +94,7 @@ def processData(ltlasDf, lowerToUpperDf, lowerToRegionDf, population):
                        suffixes=["", "Region"])
 
     ltlasDf.dailyLabConfirmedCases = ltlasDf.dailyLabConfirmedCases.fillna(0)
+    ltlasDf = ltlasDf[~(ltlasDf.regionCode.isnull())]
 
     ltlasDf['areaMovingAverage7'] = ltlasDf.groupby(
         'areaCode')['dailyLabConfirmedCases'].transform(lambda x: x.rolling(7, 1).mean())
