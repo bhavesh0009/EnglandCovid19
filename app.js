@@ -43,7 +43,8 @@ app.get("/", function (req, res) {
 
 app.get("/summary", function (req, res) {
     res.render("summary.ejs", {
-        ltlasAllSumDfJSON: ltlasAllSumDfJSON
+        ltlasAllSumDfJSON: ltlasAllSumDfJSON,
+        lastRefreshJSON: lastRefreshJSON
     });
 });
 
