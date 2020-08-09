@@ -64,18 +64,14 @@ app.get("/results", function (req, res) {
                 let specimenDate = [];
                 let confirmedCases = [];
                 let ma7Lower = [];
-                let regionConfirmedCases = [];
                 for (i = 0; i < filtered.length; i++) {
                     date = new Date(filtered[i]['specimenDate'])
                     date = date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2));
                     specimenDate.push(date);
                     confirmedCases.push(filtered[i]['dcLower']);
                     ma7Lower.push(filtered[i]['ma7Lower']);
-                    regionConfirmedCases.push(filtered[i]['dcRegion']);
                 }
                 areaName = filtered[0]['areaName'];
-                upperName = filtered[0]['urName'];
-                regionName = filtered[0]['rName'];
                 areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
                 arealast30 = filteredSum[0]['last30dCases'];
                 areaR = filteredSum[0]['rBasic'];
@@ -83,9 +79,6 @@ app.get("/results", function (req, res) {
                     specimenDate: specimenDate,
                     confirmedCases: confirmedCases,
                     areaName: areaName,
-                    upperName: upperName,
-                    regionName: regionName,
-                    regionConfirmedCases: regionConfirmedCases,
                     areaTotal: areaTotal,
                     arealast30: arealast30,
                     areaR: areaR,
