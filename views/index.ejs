@@ -74,6 +74,7 @@
                 <table class="table table-striped table-dark table-bordered text-center table-hover">
                     <thead>
                         <tr>
+                            <th>Area Code</th>
                             <th>Area Name</th>
                             <th>Prior Fortnight</th>
                             <th>Latest Fortnight</th>
@@ -83,7 +84,8 @@
                     <tbody>
                         <% ltlasworst10JSON.forEach(function(town){ %>
                         <tr>
-                            <td scope="row"><%= town.areaName%></td>
+                            <td scope="row"><a href="/results?postalCode=<%= town.areaCode %>"><%= town.areaCode%></a></td>
+                            <td><%= town.areaName%></td>
                             <td><%= town.rSecond14%></td>
                             <td><%= town.rFirst14%></td>
                             <td><%= town.rBasic%></td>
@@ -96,6 +98,7 @@
                 <table class="table table-striped table-dark table-bordered text-center table-hover">
                     <thead>
                         <tr>
+                            <th>Area Code</th>
                             <th>Area Name</th>
                             <th>Total Cases</th>
                         </tr>
@@ -103,7 +106,8 @@
                     <tbody>
                         <% ltlastop10CasesJSON.forEach(function(town){ %>
                         <tr>
-                            <td scope="row"><%= town.areaName%></td>
+                            <td scope="row"><a href="/results?postalCode=<%= town.areaCode %>"><%= town.areaCode%></a></td>
+                            <td><%= town.areaName%></a></td>
                             <td><%= town.last30dCases%></td>
                         </tr>
                     </tbody>
@@ -114,6 +118,7 @@
                 <table class="table table-striped table-dark table-bordered text-center table-hover">
                     <thead>
                         <tr>
+                            <th>Area Code</th>
                             <th>Area Name</th>
                             <th>Last 30 Days Rate</th>
                         </tr>
@@ -121,7 +126,8 @@
                     <tbody>
                         <% ltlasWorst10Rate30JSON.forEach(function(town){ %>
                         <tr>
-                            <td scope="row"><%= town.areaName%></td>
+                            <td scope="row"><a href="/results?postalCode=<%= town.areaCode %>"><%= town.areaCode%></a></td>
+                            <td><%= town.areaName%></td>
                             <td><%= town.rate%></td>
                         </tr>
                     </tbody>
@@ -144,6 +150,7 @@
                     <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
                     <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
                     <li>Rates per 100,000 resident population</li>
+                    <li>Scotland historical information is not getting populated.</li>
                 </ul>
             </span>
         </div>

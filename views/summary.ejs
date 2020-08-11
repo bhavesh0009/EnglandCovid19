@@ -87,7 +87,10 @@
             $('#example').dataTable({
                 "aaData": data,
                 "aoColumns": [
-                    { "sTitle": "Code" },
+                    { "sTitle": "Code" ,
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<a href='/results?postalCode="+oData[0]+"'>"+oData[0]+"</a>");
+                        }},
                     { "sTitle": "Name" },
                     { "sTitle": "Total Cases" },
                     { "sTitle": "Rate" },
