@@ -50,53 +50,91 @@ app.get("/summary", function (req, res) {
 
 
 app.get("/results", function (req, res) {
+    var adminDistrict = "";
     var query = req.query.postalCode;
     //    ukData = JSON.parse(ukData)
     query = query.replace(/\s/g, '');
-    var url = "http://api.postcodes.io/postcodes/" + query;
-    request(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var data = JSON.parse(body);
-            var adminDistrict = data["result"]["codes"]["admin_district"];
-            var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
-            var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
-            if (filtered.length > 0) {
-                let specimenDate = [];
-                let confirmedCases = [];
-                let ma7Lower = [];
-                for (i = 0; i < filtered.length; i++) {
-                    date = new Date(filtered[i]['specimenDate'])
-                    date = date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2));
-                    specimenDate.push(date);
-                    confirmedCases.push(filtered[i]['dcLower']);
-                    ma7Lower.push(filtered[i]['ma7Lower']);
+
+    if (query.length < 9) {
+        var url = "http://api.postcodes.io/postcodes/" + query;
+        request(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                var data = JSON.parse(body);
+                var adminDistrict = data["result"]["codes"]["admin_district"];
+                var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
+                var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
+                if (filtered.length > 0) {
+                    let specimenDate = [];
+                    let confirmedCases = [];
+                    let ma7Lower = [];
+                    for (i = 0; i < filtered.length; i++) {
+                        date = new Date(filtered[i]['specimenDate'])
+                        date = date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2));
+                        specimenDate.push(date);
+                        confirmedCases.push(filtered[i]['dcLower']);
+                        ma7Lower.push(filtered[i]['ma7Lower']);
+                    }
+                    areaName = filtered[0]['areaName'];
+                    areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
+                    arealast30 = filteredSum[0]['last30dCases'];
+                    areaR = filteredSum[0]['rBasic'];
+                    res.render("results", {
+                        specimenDate: specimenDate,
+                        confirmedCases: confirmedCases,
+                        areaName: areaName,
+                        areaTotal: areaTotal,
+                        arealast30: arealast30,
+                        areaR: areaR,
+                        ma7Lower: ma7Lower
+                    });
                 }
-                areaName = filtered[0]['areaName'];
-                areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
-                arealast30 = filteredSum[0]['last30dCases'];
-                areaR = filteredSum[0]['rBasic'];
-                res.render("results", {
-                    specimenDate: specimenDate,
-                    confirmedCases: confirmedCases,
-                    areaName: areaName,
-                    areaTotal: areaTotal,
-                    arealast30: arealast30,
-                    areaR: areaR,
-                    ma7Lower: ma7Lower
-                });
+                else {
+                    res.render("error");
+                }
             }
             else {
                 res.render("error");
             }
         }
-        else {
-            res.render("error");
-        }
+        );
     }
-    );
-});
+    else if (query.length == 9) {
+        var adminDistrict = query;
+        var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
+        var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
+        if (filtered.length > 0) {
+            let specimenDate = [];
+            let confirmedCases = [];
+            let ma7Lower = [];
+            for (i = 0; i < filtered.length; i++) {
+                date = new Date(filtered[i]['specimenDate'])
+                date = date.getFullYear() + '-' + (('0' + (date.getMonth() + 1)).slice(-2)) + '-' + (('0' + date.getDate()).slice(-2));
+                specimenDate.push(date);
+                confirmedCases.push(filtered[i]['dcLower']);
+                ma7Lower.push(filtered[i]['ma7Lower']);
+            }
+            areaName = filtered[0]['areaName'];
+            areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
+            arealast30 = filteredSum[0]['last30dCases'];
+            areaR = filteredSum[0]['rBasic'];
+            res.render("results", {
+                specimenDate: specimenDate,
+                confirmedCases: confirmedCases,
+                areaName: areaName,
+                areaTotal: areaTotal,
+                arealast30: arealast30,
+                areaR: areaR,
+                ma7Lower: ma7Lower
+            });
+        }}
+        else{
+            res.render("Invalid Request!!!");
+        }
+    });
 
-app.get("/search", function(req, res){
+
+
+app.get("/search", function (req, res) {
     res.render("testSearch");
 });
 

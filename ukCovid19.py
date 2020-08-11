@@ -111,7 +111,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasAllSumDf['rBasic'] = np.round(ltlasAllSumDf['rBasic'], 1)    
 
     ltlasWorst10RateLast30D = ltlasDf[ltlasDf.specimenDate > ltlasDf.specimenDate.max(
-    ) - timedelta(days=30)].groupby(['areaName'])['rate'].sum().sort_values(ascending=False).head(10).reset_index()
+    ) - timedelta(days=30)].groupby(['areaCode','areaName'])['rate'].sum().sort_values(ascending=False).head(10).reset_index()
     ltlasWorst10RateLast30D.rate = np.round(ltlasWorst10RateLast30D.rate, 1)
 
     ltlasSumDf = ltlasDf.groupby(
@@ -142,9 +142,9 @@ def processData(ltlasDf, population, lowerToUpperDf):
         left=ltlasSumDf,
         right=tmp,
         how='left')
-    ltlasWorst10Df = tmp[tmp.rFirst14 >= 30][['areaName', 'rFirst14',
+    ltlasWorst10Df = tmp[tmp.rFirst14 >= 30][['areaCode','areaName', 'rFirst14',
                                             'rSecond14', 'rBasic']].sort_values(by='rBasic', ascending=False).head(10)
-    ltlastop10last30dDf = tmp[['areaName', 'last30dCases']].sort_values(
+    ltlastop10last30dDf = tmp[['areaCode','areaName', 'last30dCases']].sort_values(
         by='last30dCases', ascending=False).head(10)
 
     ltlasDf = ltlasDf[ltlasDf.specimenDate >= '2020-03-01']
