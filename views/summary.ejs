@@ -22,7 +22,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>England Covid-19 Dashboard</title>
+    <title>U.K. Covid-19 Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
@@ -56,7 +56,7 @@
     </nav>
     <div class="container" id="jumboContainer">
         <div class="jumbotron">
-            <h1 class="display-5">England Covid-19 Dashboard</h1>
+            <h1 class="display-5">U.K. Covid-19 Dashboard</h1>
             <p>Daily trend of Covid-19 for your area.</p>
             <p><em>Last Updated : <%= lastRefreshJSON[0].lastUpdatedAt.substring(0,19) %></em></p>
             <p>Follow me on twitter<a class="btn-floating btn-lg btn-tw" type="button" role="button" href="https://twitter.com/bhavesh_09"><i class="fab fa-twitter"></i></a></p>
@@ -109,6 +109,17 @@
         });
     </script>
     <script src="" async defer></script>
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted">
+                <ul>
+                    <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
+                    <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
+                    <li>Rates per 100,000 resident population</li>
+                    <li>Scotland data is updated since 29th July,2020 only.</li>                </ul>
+            </span>
+        </div>
+    </footer>
 </body>
 
 </html>

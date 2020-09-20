@@ -2,7 +2,7 @@ import pandas as pd
 from uk_covid19 import Cov19API
 import requests
 import json
-from datetime import timedelta
+from datetime import timedelta, datetime
 import numpy as np
 
 
@@ -24,7 +24,21 @@ def getCasesData():
                         ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
                         }
     api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
-    data = api.get_json()  # Returns a dictionary                        
+    data = api.get_json()  # Returns a dictionary    
+    '''
+    ltlasDf = pd.read_csv("https://c19downloads.azureedge.net/downloads/csv/coronavirus-cases_latest.csv")
+    ltlasDf = ltlasDf.rename(columns=
+        {'Area type':'areaType'
+        ,"Area name":"areaName"
+        ,"Area code":"areaCode"
+        ,"Specimen date":"specimenDate"
+        ,"Daily lab-confirmed cases":"dailyLabConfirmedCases"
+        ,"Cumulative lab-confirmed cases":"totalLabConfirmedCases"
+        })
+    ltlasDf = ltlasDf[['areaType','areaName','areaCode','specimenDate','dailyLabConfirmedCases','totalLabConfirmedCases']]                        
+    now = datetime.now()
+    lastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
+    '''
     lastUpdate = data['lastUpdate']
     lastRefresh = [{"lastUpdatedAt": lastUpdate}]
     lastRefresh = pd.DataFrame(lastRefresh)
@@ -44,6 +58,8 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
     ltlasDf = ltlasDf[['areaCode', 'areaName', 'specimenDate',
                        'dailyLabConfirmedCases', 'totalLabConfirmedCases']]
+    #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('S'))]
+    #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('N'))]
 
     df1 = ltlasDf.drop_duplicates(subset=['areaCode', 'areaName'])[
         ['areaCode', 'areaName']]
@@ -136,8 +152,9 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].replace(
         np.inf, ltlasSumDf['rFirst14'])
 
-    tmp = lowerToUpperDf[['LTLA19CD', 'LTLA19NM']].drop_duplicates()
-    tmp = tmp.rename(columns={'LTLA19CD': 'areaCode', 'LTLA19NM': 'areaName'})
+    #tmp = lowerToUpperDf[['LTLA19CD', 'LTLA19NM']].drop_duplicates()
+    #tmp = tmp.rename(columns={'LTLA19CD': 'areaCode', 'LTLA19NM': 'areaName'})
+    tmp = ltlasAllSumDf[['areaCode', 'areaName']].drop_duplicates()
     tmp = pd.merge(
         left=ltlasSumDf,
         right=tmp,
@@ -160,22 +177,22 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
 
 def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh):
-    ltlasDf.to_csv('ltlas.csv')
+    #ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json",
                     orient="records", date_format='iso')
-    ltlasSumDf.to_csv('ltlasSum.csv')
+    #ltlasSumDf.to_csv('ltlasSum.csv')
     ltlasSumDf.to_json(path_or_buf="data/ltlasSum.json",
                        orient="records", date_format='iso')
-    ltlasWorst10Df.to_csv('ltlasWorst10Df.csv')
+    #ltlasWorst10Df.to_csv('ltlasWorst10Df.csv')
     ltlasWorst10Df.to_json(
         path_or_buf="data/ltlasWorst10Df.json", orient="records", date_format='iso')
-    ltlastop10last30dDf.to_csv('ltlastop10last30dDf.csv')
+    #ltlastop10last30dDf.to_csv('ltlastop10last30dDf.csv')
     ltlastop10last30dDf.to_json(
         path_or_buf="data/ltlastop10last30d.json", orient="records", date_format='iso')
-    ltlasWorst10RateLast30D.to_csv('ltlasWorst10RateLast30D.csv')
+    #ltlasWorst10RateLast30D.to_csv('ltlasWorst10RateLast30D.csv')
     ltlasWorst10RateLast30D.to_json(
         path_or_buf="data/ltlasWorst10RateLast30D.json", orient="records", date_format='iso')
-    ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
+    #ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
     ltlasAllSumDf.to_json(
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
     lastRefresh.to_json(

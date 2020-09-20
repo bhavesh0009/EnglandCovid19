@@ -62,7 +62,7 @@ app.get("/results", function (req, res) {
                 var data = JSON.parse(body);
                 var adminDistrict = data["result"]["codes"]["admin_district"];
                 var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
-                var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
+                var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
                 if (filtered.length > 0) {
                     let specimenDate = [];
                     let confirmedCases = [];
@@ -78,6 +78,9 @@ app.get("/results", function (req, res) {
                     areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
                     arealast30 = filteredSum[0]['last30dCases'];
                     areaR = filteredSum[0]['rBasic'];
+                    arealast7 = filteredSum[0]['last7dCases'];
+                    areaArea = filteredSum[0]['Area'];
+                    areaPopulation = filteredSum[0]['Population'];
                     res.render("results", {
                         specimenDate: specimenDate,
                         confirmedCases: confirmedCases,
@@ -85,7 +88,10 @@ app.get("/results", function (req, res) {
                         areaTotal: areaTotal,
                         arealast30: arealast30,
                         areaR: areaR,
-                        ma7Lower: ma7Lower
+                        ma7Lower: ma7Lower,
+                        arealast7: arealast7,
+                        areaArea: areaArea,
+                        areaPopulation: areaPopulation
                     });
                 }
                 else {
@@ -101,7 +107,7 @@ app.get("/results", function (req, res) {
     else if (query.length == 9) {
         var adminDistrict = query;
         var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
-        var filteredSum = ltlasSumJSON.filter(a => a.areaCode == adminDistrict);
+        var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
         if (filtered.length > 0) {
             let specimenDate = [];
             let confirmedCases = [];
@@ -117,6 +123,9 @@ app.get("/results", function (req, res) {
             areaTotal = filteredSum[0]['dailyLabConfirmedCases'];
             arealast30 = filteredSum[0]['last30dCases'];
             areaR = filteredSum[0]['rBasic'];
+            arealast7 = filteredSum[0]['last7dCases'];
+            areaArea = filteredSum[0]['Area'];
+            areaPopulation = filteredSum[0]['Population'];
             res.render("results", {
                 specimenDate: specimenDate,
                 confirmedCases: confirmedCases,
@@ -124,7 +133,10 @@ app.get("/results", function (req, res) {
                 areaTotal: areaTotal,
                 arealast30: arealast30,
                 areaR: areaR,
-                ma7Lower: ma7Lower
+                ma7Lower: ma7Lower,
+                arealast7: arealast7,
+                areaArea: areaArea,
+                areaPopulation: areaPopulation                
             });
         }}
         else{

@@ -21,7 +21,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>England Covid-19</title>
+    <title>U.K. Covid-19</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <meta name="description" content="">
@@ -45,7 +45,7 @@
     <section id="header">
         <div class="container text-center" id="jumboContainer">
             <div class="jumbotron mb-2" id="jumboContainerResults">
-                <h2>England Covid-19 Dashboard</h2>
+                <h2>U.K. Covid-19 Dashboard</h2>
                 <p class="mb-2">Daily trend of Covid-19 for your area.</p>
             </div>
         </div>
@@ -95,6 +95,14 @@
                         <h1 class="card-title pricing-card-title"><%= arealast30%></h1>
                     </div>
                 </div>
+                <div class="card shadow-sm" id="mainCards">
+                    <div class="card-header" id="mainCardHeader">
+                        <h4 class="my-0 font-weight-normal">Last 7 days</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title"><%= arealast7%></h1>
+                    </div>
+                </div>                
                 <div class="card shadow-sm" id="mainCards">
                     <div class="card-header"  id="mainCardHeader">
                         <h4 class="my-0 font-weight-normal">Growth</h4>
@@ -172,7 +180,8 @@
                 <ul>
                     <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
                     <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
-                </ul>
+                    <li>Rates per 100,000 resident population</li>
+                    <li>Scotland data is updated since 29th July,2020 only.</li>                </ul>
             </span>
         </div>
     </footer>
