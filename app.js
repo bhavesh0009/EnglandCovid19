@@ -27,6 +27,9 @@ let ltlasAllSumDfJSON = JSON.parse(ltlasAllSumDfData);
 let lastRefresh = fs.readFileSync('data/lastRefresh.json');
 let lastRefreshJSON = JSON.parse(lastRefresh);
 
+let msoaDfData = fs.readFileSync('data/msoaDf.json');
+let msoaDfJSON = JSON.parse(msoaDfData);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -63,6 +66,7 @@ app.get("/results", function (req, res) {
                 var adminDistrict = data["result"]["codes"]["admin_district"];
                 var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
                 var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
+                var filteredMSOA = msoaDfJSON.filter(a => a.lad19_cd == adminDistrict);
                 if (filtered.length > 0) {
                     let specimenDate = [];
                     let confirmedCases = [];
@@ -91,7 +95,8 @@ app.get("/results", function (req, res) {
                         ma7Lower: ma7Lower,
                         arealast7: arealast7,
                         areaArea: areaArea,
-                        areaPopulation: areaPopulation
+                        areaPopulation: areaPopulation,
+                        filteredMSOA: filteredMSOA
                     });
                 }
                 else {
@@ -108,6 +113,7 @@ app.get("/results", function (req, res) {
         var adminDistrict = query;
         var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
         var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
+        var filteredMSOA = msoaDfJSON.filter(a => a.lad19_cd == adminDistrict);
         if (filtered.length > 0) {
             let specimenDate = [];
             let confirmedCases = [];
@@ -136,11 +142,12 @@ app.get("/results", function (req, res) {
                 ma7Lower: ma7Lower,
                 arealast7: arealast7,
                 areaArea: areaArea,
-                areaPopulation: areaPopulation                
+                areaPopulation: areaPopulation,
+                filteredMSOA: filteredMSOA             
             });
         }}
         else{
-            res.render("Invalid Request!!!");
+            res.render("error");
         }
     });
 

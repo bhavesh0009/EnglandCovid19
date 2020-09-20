@@ -114,167 +114,66 @@
             </div>
         </div>    
     </section>
-    <div class="container mb-0 mt-3">
-        <nav class="nav nav-pills nav-justified bg-dark" style="color: #ffffff;">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#nav-30days">Last 30 Days</a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#nav-total">Total</a>
-        </nav>
-    </div>
-    <div class="tab-content mt-0" >
-        <div class="tab-pane active" id="nav-30days">
-            <div class="container my-3" id="plotLower">
-            </div>
-            <script>
-               var confirmedCasesPlt = [<%- confirmedCases %>];
-               confirmedCasesPlt = confirmedCasesPlt.slice(confirmedCasesPlt.length - 30);
-               var ma7LowerPlt = [<%- ma7Lower %>];
-               ma7LowerPlt = ma7LowerPlt.slice(ma7LowerPlt.length - 30, ma7LowerPlt.length - 5);
-               var specimenDatePlt = [];
-               var areaNamePlt = "<%- areaName %>";
-                   <% for (var j = 0; j < specimenDate.length; j++) { %>
-                   specimenDatePlt.push('<%- specimenDate[j]%>');
-                   <%}%>
-                specimenDatePlt = specimenDatePlt.slice(specimenDatePlt.length - 30);
-                   var data1 = [
-                   {
-                       x: specimenDatePlt,
-                       y: confirmedCasesPlt,
-                       type: 'bar',
-                       marker: {
-                           color: "#ffffff"
-                       },
-                       name: 'Daily Cases'
-                   },
-                   {
-                       x: specimenDatePlt,
-                       y: ma7LowerPlt,
-                       type: 'scatter',
-                       marker: {
-                           color: "#000000"
-                       },
-                       name: '7 Days Moving Average'
-                   }
-       
-               ];
-               var layout = {
-                   title: {
-                       text: 'Lower Local Authority : ' + areaNamePlt
-                   },
-                   paper_bgcolor: "#2a9d8f",
-                   plot_bgcolor: "#2a9d8f",
-                   xaxis: {
-                       title: 'Specimen Date',
-                       type: 'date',
-                       tickangle: -75,
-                       dtick: 86400000.0 * 2
-                   },
-                   yaxis: {
-                       title: 'Number of Positive Cases'
-                   },
-                   showlegend: true,
-                   legend: {
-                       x: 1,
-                       xanchor: 'right',
-                       y: 1
-                   }
-               }
-               var config = { responsive: true }
-       
-               Plotly.newPlot('plotLower', data1, layout, config);    
-           </script>        
-        </div>        
-        <div class="tab-pane fade" id="nav-total">
-            <div class="container my-3" id="plotTotal">
-            </div>
-            <script>
-               var confirmedCasesPlt = [<%- confirmedCases %>];
-               var ma7LowerPlt = [<%- ma7Lower %>];
-               ma7LowerPlt = ma7LowerPlt.slice(0, ma7LowerPlt.length - 5);
-               var specimenDatePlt = [];
-               var areaNamePlt = "<%- areaName %>";
-                   <% for (var j = 0; j < specimenDate.length; j++) { %>
-                   specimenDatePlt.push('<%- specimenDate[j]%>');
-                   <%}%>
-       
-                   var data1 = [
-                   {
-                       x: specimenDatePlt,
-                       y: confirmedCasesPlt,
-                       type: 'bar',
-                       marker: {
-                           color: "#ffffff"
-                       },
-                       name: 'Daily Cases'
-                   },
-                   {
-                       x: specimenDatePlt,
-                       y: ma7LowerPlt,
-                       type: 'scatter',
-                       marker: {
-                           color: "#000000"
-                       },
-                       name: '7 Days Moving Average'
-                   }
-       
-               ];
-               var layout = {
-                   title: {
-                       text: 'Lower Local Authority : ' + areaNamePlt
-                   },
-                   paper_bgcolor: "#2a9d8f",
-                   plot_bgcolor: "#2a9d8f",
-                   xaxis: {
-                       title: 'Specimen Date',
-                       type: 'date',
-                       tickangle: -75,
-                       dtick: 86400000.0 * 10
-                   },
-                   yaxis: {
-                       title: 'Number of Positive Cases'
-                   },
-                   showlegend: true,
-                   legend: {
-                       x: 1,
-                       xanchor: 'right',
-                       y: 1
-                   }
-               }
-               var config = { responsive: true }
-       
-               Plotly.newPlot('plotTotal', data1, layout, config);    
-           </script>        
-        </div>        
-    </div>
-    <div class="container">
-        <div class="card mb-2" id="regionTitle">
-            <div class="card-body text-center">
-                <h4>MSOA Details</h4>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <table class="table table-striped table-dark table-bordered text-center table-hover">
-            <thead>
-                <tr>
-                    <th>MSOA Code</th>
-                    <th>MSOA Name</th>
-                    <th>Last 7 Days Cases</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% filteredMSOA.forEach(function(town){ %>
-                <tr>
-                    <td scope="row"><%= town.msoa11_cd%></a></td>
-                    <td><%= town.msoa11_hclnm%></td>
-                    <td><%= town.latest_7_days%></td>
-                </tr>
-            </tbody>
-            <% }) %>
-        </table>
-
-    </div>
 
 
+    <div class="container my-3" id="plotLower"></div>
+     <script>
+        var confirmedCasesPlt = [<%- confirmedCases %>];
+        var ma7LowerPlt = [<%- ma7Lower %>];
+        ma7LowerPlt = ma7LowerPlt.slice(ma7LowerPlt.length , ma7LowerPlt.length - 5);
+        var specimenDatePlt = [];
+        var areaNamePlt = "<%- areaName %>";
+            <% for (var j = 0; j < specimenDate.length; j++) { %>
+            specimenDatePlt.push('<%- specimenDate[j]%>');
+            <%}%>
+
+            var data1 = [
+            {
+                x: specimenDatePlt,
+                y: confirmedCasesPlt,
+                type: 'bar',
+                marker: {
+                    color: "#ffffff"
+                },
+                name: 'Daily Cases'
+            },
+            {
+                x: specimenDatePlt,
+                y: ma7LowerPlt,
+                type: 'scatter',
+                marker: {
+                    color: "#000000"
+                },
+                name: '7 Days Moving Average'
+            }
+
+        ];
+        var layout = {
+            title: {
+                text: 'Lower Local Authority : ' + areaNamePlt
+            },
+            paper_bgcolor: "#2a9d8f",
+            plot_bgcolor: "#2a9d8f",
+            xaxis: {
+                title: 'Specimen Date',
+                type: 'date',
+                tickangle: -75,
+                dtick: 86400000.0 * 10
+            },
+            yaxis: {
+                title: 'Number of Positive Cases'
+            },
+            showlegend: true,
+            legend: {
+                x: 1,
+                xanchor: 'right',
+                y: 1
+            }
+        }
+        var config = { responsive: true }
+
+        Plotly.newPlot('plotLower', data1, layout, config);    
+    </script> 
     <footer class="footer mt-auto py-3">
         <div class="container">
             <span class="text-muted">
@@ -282,10 +181,7 @@
                     <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
                     <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
                     <li>Rates per 100,000 resident population</li>
-                    <li>Scotland data is updated since 29th July,2020 only.</li>                
-                    <li>Middle Super Output Area (MSOA) are small areas with around 7,200 average population. </li>
-                    <li>datasets are filtered out where cases are less than 3 to prevent disclosure and protect privacy. Small area data risk disclosure when the numbers are too small.</li>
-                </ul>
+                    <li>Scotland data is updated since 29th July,2020 only.</li>                </ul>
             </span>
         </div>
     </footer>

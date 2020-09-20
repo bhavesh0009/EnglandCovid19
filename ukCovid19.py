@@ -4,7 +4,7 @@ import requests
 import json
 from datetime import timedelta, datetime
 import numpy as np
-
+import requests
 
 def getCasesData():
     '''
@@ -45,6 +45,13 @@ def getCasesData():
     ltlasDf = pd.DataFrame(data['data'])
     return ltlasDf, lastRefresh
 
+def getMSOAData():
+    url = 'https://c19downloads.azureedge.net/downloads/msoa_data/MSOAs_latest.json'
+    resp = requests.get(url=url)
+    data = resp.json() # Check the JSON Response Content documentation below
+    df = pd.DataFrame(data['data'])[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]
+    df.loc[df.latest_7_days == -99, 'latest_7_days'] = 0
+    return df
 
 def getGeoData():
     population = pd.read_csv("data/population.csv")
@@ -176,7 +183,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
     return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf
 
 
-def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh):
+def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh, msoaDf):
     #ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json",
                     orient="records", date_format='iso')
@@ -195,14 +202,18 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWo
     #ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
     ltlasAllSumDf.to_json(
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
+    msoaDf.to_json(
+        path_or_buf="data/msoaDf.json", orient="records", date_format='iso')        
     lastRefresh.to_json(
         path_or_buf="data/lastRefresh.json" , orient="records", date_format='iso')
+
 
 
 if __name__ == "__main__":
     ltlasDf, lastRefresh = getCasesData()
     population, lowerToUpperDf = getGeoData()
+    msoaDf = getMSOAData()
     ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf = processData(
         ltlasDf, population, lowerToUpperDf)
     exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df,
-               ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh)
+               ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh, msoaDf)

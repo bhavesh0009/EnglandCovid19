@@ -46,13 +46,14 @@
             <p>Daily trend of Covid-19 for your area.</p>
             <p><em>Last Updated : <%= lastRefreshJSON[0].lastUpdatedAt.substring(0,19) %></em></p>
             <p>Follow me on twitter<a class="btn-floating btn-lg btn-tw" type="button" role="button" href="https://twitter.com/bhavesh_09"><i class="fab fa-twitter"></i></a></p>
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="bhavesh09" data-color="#FF5F5F" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000" data-font-color="#fff" data-coffee-color="#fd0" ></script>            
         </div>
     </div>
     <div class="container">
         <form action="/results" method='GET'>
             <div class="row d-flex justify-content-center" id="search-input">
                 <div class="input-group mb-3 col-lg-12 col-12">
-                    <input type="text" class="form-control" placeholder="Enter your postal code." name="postalCode">
+                    <input type="text" class="form-control" placeholder="Enter your complete post code." name="postalCode">
                     <div class="input-group-append">
 
                         <button type="submit" class="btn btn-default" id="basic-addon2">
@@ -65,12 +66,33 @@
     </div>
     <div class="container">
         <nav class="nav nav-pills nav-justified bg-dark" style="color: #ffffff;">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#nav-growth">Growth Rate</a>
+            <a class="nav-item nav-link active" data-toggle="tab" href="#nav-rate">Last 30 Days Rate</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-growth">Growth Rate</a>
             <a class="nav-item nav-link" data-toggle="tab" href="#nav-total">Last 30 Days Cases</a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#nav-rate">Last 30 Days Rate</a>
         </nav>
+
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-growth">
+            <div class="tab-pane active" id="nav-rate">
+                <table class="table table-striped table-dark table-bordered text-center table-hover">
+                    <thead>
+                        <tr>
+                            <th>Area Code</th>
+                            <th>Area Name</th>
+                            <th>Last 30 Days Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% ltlasWorst10Rate30JSON.forEach(function(town){ %>
+                        <tr>
+                            <td scope="row"><a href="/results?postalCode=<%= town.areaCode %>"><%= town.areaCode%></a></td>
+                            <td><%= town.areaName%></td>
+                            <td><%= town.rate%></td>
+                        </tr>
+                    </tbody>
+                    <% }) %>
+                </table>
+            </div>        
+            <div class="tab-pane fade" id="nav-growth">
                 <table class="table table-striped table-dark table-bordered text-center table-hover">
                     <thead>
                         <tr>
@@ -114,26 +136,7 @@
                     <% }) %>
                 </table>
             </div>
-            <div class="tab-pane fade" id="nav-rate">
-                <table class="table table-striped table-dark table-bordered text-center table-hover">
-                    <thead>
-                        <tr>
-                            <th>Area Code</th>
-                            <th>Area Name</th>
-                            <th>Last 30 Days Rate</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% ltlasWorst10Rate30JSON.forEach(function(town){ %>
-                        <tr>
-                            <td scope="row"><a href="/results?postalCode=<%= town.areaCode %>"><%= town.areaCode%></a></td>
-                            <td><%= town.areaName%></td>
-                            <td><%= town.rate%></td>
-                        </tr>
-                    </tbody>
-                    <% }) %>
-                </table>
-            </div>
+
         </div>
     </div>
     <div class="container">
@@ -142,7 +145,7 @@
                 Areas</a>        
         </div>
     </div>
-
+    
     <footer class="footer mt-auto py-3">
         <div class="container">
             <span class="text-muted">
