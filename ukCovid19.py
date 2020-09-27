@@ -5,6 +5,7 @@ import json
 from datetime import timedelta, datetime
 import numpy as np
 import requests
+import time
 
 def getCasesData():
     '''
@@ -183,7 +184,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
     return ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf
 
 
-def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh, msoaDf):
+def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh,msoaDf):
     #ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json",
                     orient="records", date_format='iso')
@@ -202,6 +203,10 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWo
     #ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
     ltlasAllSumDf.to_json(
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    msoaDf.to_json(
+        path_or_buf="data/Archive/msoaDf_"+timestr+".json", orient="records", date_format='iso')        
+
     msoaDf.to_json(
         path_or_buf="data/msoaDf.json", orient="records", date_format='iso')        
     lastRefresh.to_json(
