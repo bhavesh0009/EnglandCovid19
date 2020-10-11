@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var request = require("request");
 const port = 8080;
 const fs = require("fs");
+const geolib = require('geolib');
 
 //let ukData = require('ltlas.json');
 let ltlasData = fs.readFileSync('data/ltlas.json');
@@ -67,6 +68,15 @@ app.get("/results", function (req, res) {
                 var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
                 var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
                 var filteredMSOA = msoaDfJSON.filter(a => a.lad19_cd == adminDistrict);
+                for (i=0; i < filteredMSOA.length; i++){
+                    latA = filteredMSOA[i]['msoaLat'];
+                    longA = filteredMSOA[i]['msoaLong'];
+                    latB = data['result']['latitude'];
+                    longB = data['result']['longitude'];
+                    dist = geolib.getDistance({latitude:latA,longitude:longA},{latitude:latB, longitude:longB});
+                    filteredMSOA[i]['distance'] = dist;
+                }
+                filteredMSOA.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
                 if (filtered.length > 0) {
                     let specimenDate = [];
                     let confirmedCases = [];
@@ -114,6 +124,7 @@ app.get("/results", function (req, res) {
         var filtered = ltlasJSON.filter(a => a.areaCode == adminDistrict);
         var filteredSum = ltlasAllSumDfJSON.filter(a => a.areaCode == adminDistrict);
         var filteredMSOA = msoaDfJSON.filter(a => a.lad19_cd == adminDistrict);
+        filteredMSOA.sort((a, b) => parseFloat(b.latest_7_days) - parseFloat(a.latest_7_days));
         if (filtered.length > 0) {
             let specimenDate = [];
             let confirmedCases = [];

@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 import numpy as np
 import requests
 import time
+from time import sleep
 
 def getCasesData():
     '''
@@ -25,7 +26,8 @@ def getCasesData():
                         ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
                         }
     api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
-    data = api.get_json()  # Returns a dictionary    
+    data = api.get_json()  # Returns a dictionary
+
     '''
     ltlasDf = pd.read_csv("https://c19downloads.azureedge.net/downloads/csv/coronavirus-cases_latest.csv")
     ltlasDf = ltlasDf.rename(columns=
@@ -50,7 +52,16 @@ def getMSOAData():
     url = 'https://c19downloads.azureedge.net/downloads/msoa_data/MSOAs_latest.json'
     resp = requests.get(url=url)
     data = resp.json() # Check the JSON Response Content documentation below
-    df = pd.DataFrame(data['data'])[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]
+    if 'latest_7_days' in data['data'][0].keys():
+        df = pd.DataFrame(data['data'])[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]
+    else:
+        df = json_normalize(data['data'],'msoa_data',['lad19_cd','lad19_nm','msoa11_cd','msoa11_hclnm'])
+        df = df[df.week == df.week.max()]
+        df['latest_7_days'] = df.value
+        df = df[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]    
+    dfCoords = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_coords.csv")
+    df = df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
+    df = df[['lad19_cd', 'lad19_nm', 'latest_7_days', 'msoa11_cd', 'msoa11_hclnm', 'msoaLong', 'msoaLat']]
     df.loc[df.latest_7_days == -99, 'latest_7_days'] = 0
     return df
 
