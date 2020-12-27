@@ -116,6 +116,16 @@ body{
   padding-top: 0px;
 }
 
+#social-wa{
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+#social-twitter{
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
 #regionTitle{
   background-color: #2a9d8f;
   color:#ffffff;
@@ -129,6 +139,11 @@ body{
 }
 
 #mainCards{
+  background-color: #b62400;
+  color:#ffffff;
+}
+
+mainCardsDeath{
   background-color: #b62400;
   color:#ffffff;
 }

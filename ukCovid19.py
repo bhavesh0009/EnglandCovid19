@@ -24,7 +24,7 @@ def getCasesData():
                         ,"specimenDate":"date"
                         ,"dailyLabConfirmedCases":"newCasesBySpecimenDate"
                         ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
-                        }
+                        ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"}
     api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
     data = api.get_json()  # Returns a dictionary
 
@@ -49,21 +49,26 @@ def getCasesData():
     return ltlasDf, lastRefresh
 
 def getMSOAData():
-    url = 'https://c19downloads.azureedge.net/downloads/msoa_data/MSOAs_latest.json'
-    resp = requests.get(url=url)
-    data = resp.json() # Check the JSON Response Content documentation below
-    if 'latest_7_days' in data['data'][0].keys():
-        df = pd.DataFrame(data['data'])[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]
-    else:
-        df = json_normalize(data['data'],'msoa_data',['lad19_cd','lad19_nm','msoa11_cd','msoa11_hclnm'])
-        df = df[df.week == df.week.max()]
-        df['latest_7_days'] = df.value
-        df = df[['lad19_cd','lad19_nm','latest_7_days','msoa11_cd','msoa11_hclnm']]    
+    #url = "https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json"
+    #resp = requests.get(url=url)
+    #data = resp.json()
+    #print(data.keys())
+    #mosa_df = pd.DataFrame(data['body'])
+    
+    mosa_df = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_2020-12-27.csv")
+    mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
+    mosa_df = mosa_df[['LtlaCode','LtlaName','newCasesBySpecimenDateRollingSum','areaCode','areaName']]
+    mosa_df = mosa_df.rename(columns={"LtlaCode": "lad19_cd", 
+                            "LtlaName": "lad19_nm",
+                            "newCasesBySpecimenDateRollingSum": "latest_7_days",
+                            "areaCode": "msoa11_cd",
+                            "areaName": "msoa11_hclnm"})
+    mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')          
     dfCoords = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_coords.csv")
-    df = df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
-    df = df[['lad19_cd', 'lad19_nm', 'latest_7_days', 'msoa11_cd', 'msoa11_hclnm', 'msoaLong', 'msoaLat']]
-    df.loc[df.latest_7_days == -99, 'latest_7_days'] = 0
-    return df
+    mosa_df = mosa_df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
+    mosa_df = mosa_df[['lad19_cd', 'lad19_nm', 'latest_7_days', 'msoa11_cd', 'msoa11_hclnm', 'msoaLong', 'msoaLat','population']]
+    mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0)
+    return mosa_df
 
 def getGeoData():
     population = pd.read_csv("data/population.csv")
@@ -76,7 +81,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasDf.specimenDate = pd.to_datetime(ltlasDf.specimenDate)
 
     ltlasDf = ltlasDf[['areaCode', 'areaName', 'specimenDate',
-                       'dailyLabConfirmedCases', 'totalLabConfirmedCases']]
+                       'dailyLabConfirmedCases', 'totalLabConfirmedCases', 'cumDeaths28DaysByDeathDate']]
     #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('S'))]
     #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('N'))]
 
@@ -94,6 +99,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
 
     ltlasDf.dailyLabConfirmedCases = ltlasDf.dailyLabConfirmedCases.fillna(0)
+    ltlasDf.cumDeaths28DaysByDeathDate = ltlasDf.cumDeaths28DaysByDeathDate.fillna(0) 
 
     ltlasDf['areaMovingAverage7'] = ltlasDf.groupby(
         'areaCode')['dailyLabConfirmedCases'].transform(lambda x: x.rolling(7, 1).mean())
@@ -113,6 +119,7 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
 
     ltlasAllSumDf = ltlasDf.groupby(['areaCode', 'areaName']).agg({'dailyLabConfirmedCases': 'sum',
+                                                                'cumDeaths28DaysByDeathDate': 'max',
                                                                 'rate': 'sum',
                                                                 'Population': 'max',
                                                                 'Area': 'max'}).reset_index()
@@ -216,7 +223,7 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWo
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
     timestr = time.strftime("%Y%m%d-%H%M%S")
     msoaDf.to_json(
-        path_or_buf="data/Archive/msoaDf_"+timestr+".json", orient="records", date_format='iso')        
+        path_or_buf=r"C:\Users\Projects\Documents\Archive\msoaDf_"+timestr+".json", orient="records", date_format='iso')        
 
     msoaDf.to_json(
         path_or_buf="data/msoaDf.json", orient="records", date_format='iso')        

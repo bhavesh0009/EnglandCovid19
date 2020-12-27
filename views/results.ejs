@@ -47,6 +47,7 @@
             <div class="jumbotron mb-2" id="jumboContainerResults">
                 <h2>U.K. Covid-19 Dashboard</h2>
                 <p class="mb-2">Daily trend of Covid-19 for your area.</p>
+                <p>Share with Whatsapp<a class="btn-floating btn-lg btn-tw" type="button" role="button" href="whatsapp://send?text=Check Local Spread of Covid-19 https://ukcovid19.nw.r.appspot.com/" data-action="share/whatsapp/share"><i style="color:#25D366" class="fab fa-whatsapp"></i></a></p>
             </div>
         </div>
     </section>
@@ -111,10 +112,18 @@
                         <h1 class="card-title pricing-card-title"><%= areaR%></h1>
                     </div>
                 </div>
+                <div class="card shadow-sm" id="mainCards" name="deathDiv">
+                    <div class="card-header"  id="mainCardHeader">
+                        <h4 class="my-0 font-weight-normal">Deaths</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 id="deathH1" class="card-title pricing-card-title"><%= areaDeaths%></h1>
+                    </div>
+                </div>             
             </div>
         </div>    
     </section>
-    <div class="container">
+    <div class="container my-2">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <ins class="adsbygoogle"
             style="display:block"
@@ -185,8 +194,8 @@
                    },
                    showlegend: true,
                    legend: {
-                       x: 1,
-                       xanchor: 'right',
+                       x: 0,
+                       xanchor: 'left',
                        y: 1
                    }
                }
@@ -246,8 +255,8 @@
                    },
                    showlegend: true,
                    legend: {
-                       x: 1,
-                       xanchor: 'right',
+                       x: 0,
+                       xanchor: 'left',
                        y: 1
                    }
                }
@@ -257,7 +266,7 @@
            </script>        
         </div>        
     </div>
-    <div class="container">
+    <div class="container  my-2">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <ins class="adsbygoogle"
             style="display:block"
@@ -269,35 +278,39 @@
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>    
     </div>    
-    <div class="container">
-        <div class="card mb-2" id="regionTitle">
-            <div class="card-body text-center">
-                <h4>MSOA Details</h4>
+    <div id="msoaDetails">
+        <div class="container">
+            <div class="card mb-2" id="regionTitle">
+                <div class="card-body text-center">
+                    <h4>MSOA Details</h4>
+                </div>
             </div>
         </div>
+        <div class="container">
+            <table class="table table-striped table-dark table-bordered text-center table-hover">
+                <thead>
+                    <tr>
+                        <th>MSOA Code</th>
+                        <th>MSOA Name</th>
+                        <th>Last 7 Days Cases</th>
+                        <th>Population</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% filteredMSOA.forEach(function(town){ %>
+                    <tr>
+                        <td scope="row"><%= town.msoa11_cd%></a></td>
+                        <td><%= town.msoa11_hclnm%></td>
+                        <td><%= town.latest_7_days%></td>
+                        <td><%= town.population%></td>
+                    </tr>
+                </tbody>
+                <% }) %>
+            </table>
+    
+        </div>
     </div>
-    <div class="container">
-        <table class="table table-striped table-dark table-bordered text-center table-hover">
-            <thead>
-                <tr>
-                    <th>MSOA Code</th>
-                    <th>MSOA Name</th>
-                    <th>Last 7 Days Cases</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% filteredMSOA.forEach(function(town){ %>
-                <tr>
-                    <td scope="row"><%= town.msoa11_cd%></a></td>
-                    <td><%= town.msoa11_hclnm%></td>
-                    <td><%= town.latest_7_days%></td>
-                </tr>
-            </tbody>
-            <% }) %>
-        </table>
-
-    </div>
-    <div class="container">
+    <div class="container  my-2">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <ins class="adsbygoogle"
             style="display:block"
@@ -320,10 +333,23 @@
                     <li>Scotland data is updated since 29th July,2020 only.</li>                
                     <li>Middle Super Output Area (MSOA) are small areas with around 7,200 average population. </li>
                     <li>datasets are filtered out where cases are less than 3 to prevent disclosure and protect privacy. Small area data risk disclosure when the numbers are too small.</li>
+                    <li>Death = Total number of deaths since the start of the pandemic of people who had had a positive test result for COVID-19 and died within 28 days of the first positive test. 
+                        The loss is unmeasurable. May their soul find peace and comfort. Keeping them in prayers.</li>
                 </ul>
             </span>
         </div>
     </footer>
+    <script>
+         var fMSOA = <%- filteredMSOA.length %>;
+        if (fMSOA == 0){
+            document.getElementById("msoaDetails").style.display = "none";
+        };
+        var deathCount = <%- areaDeaths%>;
+        if (deathCount == 0){
+            console.log(deathCount);
+            document.getElementById("deathH1").innerHTML  = "NA";
+        };
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>

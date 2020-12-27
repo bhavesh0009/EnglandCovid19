@@ -76,6 +76,7 @@ app.get("/results", function (req, res) {
                     dist = geolib.getDistance({latitude:latA,longitude:longA},{latitude:latB, longitude:longB});
                     filteredMSOA[i]['distance'] = dist;
                 }
+
                 filteredMSOA.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
                 if (filtered.length > 0) {
                     let specimenDate = [];
@@ -95,6 +96,7 @@ app.get("/results", function (req, res) {
                     arealast7 = filteredSum[0]['last7dCases'];
                     areaArea = filteredSum[0]['Area'];
                     areaPopulation = filteredSum[0]['Population'];
+                    areaDeaths = filteredSum[0]['cumDeaths28DaysByDeathDate'];
                     res.render("results", {
                         specimenDate: specimenDate,
                         confirmedCases: confirmedCases,
@@ -143,6 +145,7 @@ app.get("/results", function (req, res) {
             arealast7 = filteredSum[0]['last7dCases'];
             areaArea = filteredSum[0]['Area'];
             areaPopulation = filteredSum[0]['Population'];
+            areaDeaths = filteredSum[0]['cumDeaths28DaysByDeathDate'];
             res.render("results", {
                 specimenDate: specimenDate,
                 confirmedCases: confirmedCases,
