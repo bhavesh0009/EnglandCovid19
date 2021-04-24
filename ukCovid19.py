@@ -60,14 +60,8 @@ def getCasesData():
     return ltlasDf, lastRefresh
 
 def getMSOAData():
-    # url = "https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json"
-    # resp = requests.get(url=url)
-    # data = resp.json()
-    # print(data.keys())
-    # mosa_df = pd.DataFrame(data['body'])
-    
-    #mosa_df = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_2021-02-10.csv")
-    mosa_df = pd.read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=csv")
+    d = requests.get("https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json").json()
+    mosa_df = pd.DataFrame.from_dict(d['body'])
     mosa_df['date'] = pd.to_datetime(mosa_df['date'])
     mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
     mosa_df = mosa_df[['LtlaCode','LtlaName','newCasesBySpecimenDateRollingSum','areaCode','areaName']]
@@ -79,6 +73,8 @@ def getMSOAData():
     mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')          
     dfCoords = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_coords.csv")
     mosa_df = mosa_df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
+    #mosa_df = dfCoords.merge(mosa_df, how="left", left_on="msoaCD", right_on="msoa11_cd")
+    #mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')
     mosa_df = mosa_df[['lad19_cd', 'lad19_nm', 'latest_7_days', 'msoa11_cd', 'msoa11_hclnm', 'msoaLong', 'msoaLat','population']]
     mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0)
     return mosa_df
