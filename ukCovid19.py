@@ -1,5 +1,5 @@
 import pandas as pd
-from uk_covid19 import Cov19API
+#from uk_covid19 import Cov19API
 import requests
 import json
 from datetime import timedelta, datetime
@@ -16,7 +16,7 @@ def getCasesData():
     ltlasDf = pd.DataFrame(requestJson['ltlas'])
     lastRefresh = pd.DataFrame(requestJson['metadata'], index=[0])
     '''
-    ltla_filter = ['areaType=ltla']
+    """ ltla_filter = ['areaType=ltla']
     cases_and_deaths = {
                         "areaType":"areaType"
                         ,"areaName":"areaName"
@@ -26,7 +26,7 @@ def getCasesData():
                         ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
                         ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"}
     api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
-    data = api.get_json()  # Returns a dictionary
+    data = api.get_json()  # Returns a dictionary """
 
     '''
     ltlasDf = pd.read_csv("https://c19downloads.azureedge.net/downloads/csv/coronavirus-cases_latest.csv")
@@ -42,20 +42,33 @@ def getCasesData():
     now = datetime.now()
     lastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
     '''
-    lastUpdate = data['lastUpdate']
+    lastUpdate = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     lastRefresh = [{"lastUpdatedAt": lastUpdate}]
     lastRefresh = pd.DataFrame(lastRefresh)
-    ltlasDf = pd.DataFrame(data['data'])
+    #ltlasDf = pd.DataFrame(data['data'])
+    ltlasDf = pd.read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=cumCasesBySpecimenDate&metric=newCasesBySpecimenDate&metric=cumDeaths28DaysByDeathDate&format=csv")
+    cases_and_deaths = {
+                    "areaType":"areaType"
+                    ,"areaName":"areaName"
+                    ,"areaCode":"areaCode"
+                    ,"date":"specimenDate"
+                    ,"newCasesBySpecimenDate":"dailyLabConfirmedCases"
+                    ,"cumCasesBySpecimenDate":"totalLabConfirmedCases"
+                    ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"}
+
+    ltlasDf = ltlasDf.rename(cases_and_deaths, axis='columns')                    
     return ltlasDf, lastRefresh
 
 def getMSOAData():
-    #url = "https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json"
-    #resp = requests.get(url=url)
-    #data = resp.json()
-    #print(data.keys())
-    #mosa_df = pd.DataFrame(data['body'])
+    # url = "https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json"
+    # resp = requests.get(url=url)
+    # data = resp.json()
+    # print(data.keys())
+    # mosa_df = pd.DataFrame(data['body'])
     
-    mosa_df = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_2020-12-27.csv")
+    #mosa_df = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_2021-02-10.csv")
+    mosa_df = pd.read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=csv")
+    mosa_df['date'] = pd.to_datetime(mosa_df['date'])
     mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
     mosa_df = mosa_df[['LtlaCode','LtlaName','newCasesBySpecimenDateRollingSum','areaCode','areaName']]
     mosa_df = mosa_df.rename(columns={"LtlaCode": "lad19_cd", 
@@ -141,7 +154,8 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasAllSumDf['rSecond14'] = ltlasAllSumDf['areaCode'].map(tmp1)
     ltlasAllSumDf['rBasic'] = np.round(ltlasAllSumDf['rFirst14'] /  ltlasAllSumDf['rSecond14'],2)
     ltlasAllSumDf['rBasic'] = ltlasAllSumDf['rBasic'].fillna(0)
-    ltlasAllSumDf['rBasic'] = ltlasAllSumDf['rBasic'].replace(np.inf, ltlasAllSumDf['rFirst14'])
+    #ltlasAllSumDf['rBasic'] = ltlasAllSumDf['rBasic'].replace(np.inf, ltlasAllSumDf['rFirst14'])
+    ltlasAllSumDf.loc[ltlasAllSumDf.rBasic == np.inf, 'rBasic'] = ltlasAllSumDf.loc[ltlasAllSumDf.rBasic == np.inf, 'rFirst14']
     
     ltlasAllSumDf['relativeDiff'] = ltlasAllSumDf['rFirst14'] -  ltlasAllSumDf['rSecond14']
     ltlasAllSumDf['rate'] = np.round(ltlasAllSumDf['rate'], 1)
@@ -175,8 +189,8 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasSumDf.rFirst14 = ltlasSumDf.rFirst14.astype('int')
     ltlasSumDf.rSecond14 = ltlasSumDf.rSecond14.astype('int')
     ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].fillna(0)
-    ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].replace(
-        np.inf, ltlasSumDf['rFirst14'])
+    #ltlasSumDf['rBasic'] = ltlasSumDf['rBasic'].replace(np.inf, ltlasSumDf['rFirst14'])
+    ltlasSumDf.loc[ltlasSumDf.rBasic == np.inf, 'rBasic'] = ltlasSumDf.loc[ltlasSumDf.rBasic == np.inf, 'rFirst14']
 
     #tmp = lowerToUpperDf[['LTLA19CD', 'LTLA19NM']].drop_duplicates()
     #tmp = tmp.rename(columns={'LTLA19CD': 'areaCode', 'LTLA19NM': 'areaName'})
