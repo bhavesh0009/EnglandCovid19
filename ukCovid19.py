@@ -63,14 +63,27 @@ def getMSOAData():
     d = requests.get("https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json").json()
     mosa_df = pd.DataFrame.from_dict(d['body'])
     mosa_df['date'] = pd.to_datetime(mosa_df['date'])
+    # # mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
+    # # mosa_df = mosa_df[['ltlacode','ltlaname','newcasesbyspecimendaterollingsum','areacode','areaname']]
+    # # mosa_df = mosa_df.rename(columns={"ltlacode": "lad19_cd", 
+    # #                         "ltlaname": "lad19_nm",
+    # #                         "newcasesbyspecimendaterollingsum": "latest_7_days",
+    # #                         "areacode": "msoa11_cd",
+    # #                         "areaname": "msoa11_hclnm"})
+    # # mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')          
+    all_msoa = mosa_df[['LtlaCode','LtlaName','areaCode','areaName']].drop_duplicates()
     mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
-    mosa_df = mosa_df[['LtlaCode','LtlaName','newCasesBySpecimenDateRollingSum','areaCode','areaName']]
-    mosa_df = mosa_df.rename(columns={"LtlaCode": "lad19_cd", 
-                            "LtlaName": "lad19_nm",
+    mosa_df = all_msoa.merge(mosa_df,
+    how='left',
+    left_on='areaCode',
+    right_on='areaCode')[['LtlaCode_x','LtlaName_x','newCasesBySpecimenDateRollingSum','areaCode','areaName_x']]
+    mosa_df = mosa_df.rename(columns={"LtlaCode_x": "lad19_cd", 
+                            "LtlaName_x": "lad19_nm",
                             "newCasesBySpecimenDateRollingSum": "latest_7_days",
                             "areaCode": "msoa11_cd",
-                            "areaName": "msoa11_hclnm"})
-    mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')          
+                            "areaName_x": "msoa11_hclnm"})
+    mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')    
+         
     dfCoords = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_coords.csv")
     mosa_df = mosa_df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
     #mosa_df = dfCoords.merge(mosa_df, how="left", left_on="msoaCD", right_on="msoa11_cd")
