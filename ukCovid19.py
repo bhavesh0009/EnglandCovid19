@@ -9,44 +9,11 @@ import time
 from time import sleep
 
 def getCasesData():
-    '''
-    request = requests.get(
-        "https://coronavirus.data.gov.uk/downloads/json/coronavirus-cases_latest.json")
-    requestJson = json.loads(request.content)
-    ltlasDf = pd.DataFrame(requestJson['ltlas'])
-    lastRefresh = pd.DataFrame(requestJson['metadata'], index=[0])
-    '''
-    """ ltla_filter = ['areaType=ltla']
-    cases_and_deaths = {
-                        "areaType":"areaType"
-                        ,"areaName":"areaName"
-                        ,"areaCode":"areaCode"
-                        ,"specimenDate":"date"
-                        ,"dailyLabConfirmedCases":"newCasesBySpecimenDate"
-                        ,"totalLabConfirmedCases":"cumCasesBySpecimenDate"
-                        ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"}
-    api = Cov19API(filters=ltla_filter, structure=cases_and_deaths)
-    data = api.get_json()  # Returns a dictionary """
-
-    '''
-    ltlasDf = pd.read_csv("https://c19downloads.azureedge.net/downloads/csv/coronavirus-cases_latest.csv")
-    ltlasDf = ltlasDf.rename(columns=
-        {'Area type':'areaType'
-        ,"Area name":"areaName"
-        ,"Area code":"areaCode"
-        ,"Specimen date":"specimenDate"
-        ,"Daily lab-confirmed cases":"dailyLabConfirmedCases"
-        ,"Cumulative lab-confirmed cases":"totalLabConfirmedCases"
-        })
-    ltlasDf = ltlasDf[['areaType','areaName','areaCode','specimenDate','dailyLabConfirmedCases','totalLabConfirmedCases']]                        
-    now = datetime.now()
-    lastUpdate = now.strftime("%d/%m/%Y %H:%M:%S")
-    '''
     lastUpdate = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     lastRefresh = [{"lastUpdatedAt": lastUpdate}]
     lastRefresh = pd.DataFrame(lastRefresh)
     #ltlasDf = pd.DataFrame(data['data'])
-    ltlasDf = pd.read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=cumCasesBySpecimenDate&metric=newCasesBySpecimenDate&metric=cumDeaths28DaysByDeathDate&format=csv")
+    ltlasDf = pd.read_csv("https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=cumCasesBySpecimenDate&metric=cumDeaths28DaysByDeathDate&metric=cumVaccinationFirstDoseUptakeByVaccinationDatePercentage&metric=newCasesBySpecimenDate&metric=cumVaccinationSecondDoseUptakeByVaccinationDatePercentage&format=csv")
     cases_and_deaths = {
                     "areaType":"areaType"
                     ,"areaName":"areaName"
@@ -54,7 +21,9 @@ def getCasesData():
                     ,"date":"specimenDate"
                     ,"newCasesBySpecimenDate":"dailyLabConfirmedCases"
                     ,"cumCasesBySpecimenDate":"totalLabConfirmedCases"
-                    ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"}
+                    ,"cumDeaths28DaysByDeathDate":"cumDeaths28DaysByDeathDate"
+                    ,"cumVaccinationFirstDoseUptakeByVaccinationDatePercentage":"totalVaccineFirstPerCent"
+                    ,"cumVaccinationSecondDoseUptakeByVaccinationDatePercentage":"totalVaccineSecondPerCent"}
 
     ltlasDf = ltlasDf.rename(cases_and_deaths, axis='columns')                    
     return ltlasDf, lastRefresh
@@ -63,27 +32,20 @@ def getMSOAData():
     d = requests.get("https://api.coronavirus.data.gov.uk/v2/data?areaType=msoa&metric=newCasesBySpecimenDateRollingSum&format=json").json()
     mosa_df = pd.DataFrame.from_dict(d['body'])
     mosa_df['date'] = pd.to_datetime(mosa_df['date'])
-    # # mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
-    # # mosa_df = mosa_df[['ltlacode','ltlaname','newcasesbyspecimendaterollingsum','areacode','areaname']]
-    # # mosa_df = mosa_df.rename(columns={"ltlacode": "lad19_cd", 
-    # #                         "ltlaname": "lad19_nm",
-    # #                         "newcasesbyspecimendaterollingsum": "latest_7_days",
-    # #                         "areacode": "msoa11_cd",
-    # #                         "areaname": "msoa11_hclnm"})
-    # # mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')          
+     
     all_msoa = mosa_df[['LtlaCode','LtlaName','areaCode','areaName']].drop_duplicates()
     mosa_df = mosa_df[mosa_df.date == mosa_df.date.max()]
     mosa_df = all_msoa.merge(mosa_df,
-    how='left',
-    left_on='areaCode',
-    right_on='areaCode')[['LtlaCode_x','LtlaName_x','newCasesBySpecimenDateRollingSum','areaCode','areaName_x']]
+                        how='left',
+                        left_on='areaCode',
+                        right_on='areaCode')[['LtlaCode_x','LtlaName_x','newCasesBySpecimenDateRollingSum','areaCode','areaName_x']]
     mosa_df = mosa_df.rename(columns={"LtlaCode_x": "lad19_cd", 
                             "LtlaName_x": "lad19_nm",
                             "newCasesBySpecimenDateRollingSum": "latest_7_days",
                             "areaCode": "msoa11_cd",
                             "areaName_x": "msoa11_hclnm"})
     mosa_df['latest_7_days'] = mosa_df['latest_7_days'].fillna(0).astype('int')    
-         
+
     dfCoords = pd.read_csv(r"C:\Users\Projects\Documents\Engliand Covid Data\data\msoa_coords.csv")
     mosa_df = mosa_df.merge(dfCoords, how="left", left_on="msoa11_cd", right_on="msoaCD")
     #mosa_df = dfCoords.merge(mosa_df, how="left", left_on="msoaCD", right_on="msoa11_cd")
@@ -103,7 +65,8 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasDf.specimenDate = pd.to_datetime(ltlasDf.specimenDate)
 
     ltlasDf = ltlasDf[['areaCode', 'areaName', 'specimenDate',
-                       'dailyLabConfirmedCases', 'totalLabConfirmedCases', 'cumDeaths28DaysByDeathDate']]
+                       'dailyLabConfirmedCases', 'totalLabConfirmedCases', 'cumDeaths28DaysByDeathDate',
+                       'totalVaccineFirstPerCent', 'totalVaccineSecondPerCent']]
     #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('S'))]
     #ltlasDf = ltlasDf[~(ltlasDf.areaCode.str.startswith('N'))]
 
@@ -122,6 +85,8 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
     ltlasDf.dailyLabConfirmedCases = ltlasDf.dailyLabConfirmedCases.fillna(0)
     ltlasDf.cumDeaths28DaysByDeathDate = ltlasDf.cumDeaths28DaysByDeathDate.fillna(0) 
+    ltlasDf.totalVaccineFirstPerCent = ltlasDf.totalVaccineFirstPerCent.fillna(0) 
+    ltlasDf.totalVaccineSecondPerCent = ltlasDf.totalVaccineSecondPerCent.fillna(0) 
 
     ltlasDf['areaMovingAverage7'] = ltlasDf.groupby(
         'areaCode')['dailyLabConfirmedCases'].transform(lambda x: x.rolling(7, 1).mean())
@@ -144,7 +109,9 @@ def processData(ltlasDf, population, lowerToUpperDf):
                                                                 'cumDeaths28DaysByDeathDate': 'max',
                                                                 'rate': 'sum',
                                                                 'Population': 'max',
-                                                                'Area': 'max'}).reset_index()
+                                                                'Area': 'max',
+                                                                'totalVaccineFirstPerCent': 'max',
+                                                                'totalVaccineSecondPerCent': 'max'}).reset_index()
     # Adding Last 30 days cases and growth
     tmp = ltlasDf[ltlasDf.specimenDate > (ltlasDf.specimenDate.max() - timedelta(days=30))].groupby('areaCode')['dailyLabConfirmedCases'].sum()
     ltlasAllSumDf['last30dCases'] = ltlasAllSumDf['areaCode'].map(tmp)
@@ -174,6 +141,10 @@ def processData(ltlasDf, population, lowerToUpperDf):
     ltlasAllSumDf['rSecond14'] = np.round(ltlasAllSumDf['rSecond14'], 1)
     ltlasAllSumDf['relativeDiff'] = np.round(ltlasAllSumDf['relativeDiff'], 1)
     ltlasAllSumDf['rBasic'] = np.round(ltlasAllSumDf['rBasic'], 1)    
+    ltlasAllSumDf['totalVaccineFirstPerCent'] = ltlasAllSumDf['totalVaccineFirstPerCent'].astype('float')
+    ltlasAllSumDf['totalVaccineSecondPerCent'] = ltlasAllSumDf['totalVaccineSecondPerCent'].astype('float')
+    ltlasAllSumDf['totalVaccineFirstPerCent'] = ltlasAllSumDf['totalVaccineFirstPerCent'].round(1)
+    ltlasAllSumDf['totalVaccineSecondPerCent'] = ltlasAllSumDf['totalVaccineSecondPerCent'].round(1)
 
     ltlasWorst10RateLast30D = ltlasDf[ltlasDf.specimenDate > ltlasDf.specimenDate.max(
     ) - timedelta(days=30)].groupby(['areaCode','areaName'])['rate'].sum().sort_values(ascending=False).head(10).reset_index()

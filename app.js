@@ -97,6 +97,9 @@ app.get("/results", function (req, res) {
                     areaArea = filteredSum[0]['Area'];
                     areaPopulation = filteredSum[0]['Population'];
                     areaDeaths = filteredSum[0]['cumDeaths28DaysByDeathDate'];
+                    totalVaccineFirstPerCent = filteredSum[0]['totalVaccineFirstPerCent'];
+                    totalVaccineSecondPerCent = filteredSum[0]['totalVaccineSecondPerCent'];
+                    rate = filteredSum[0]['rate'];
                     res.render("results", {
                         specimenDate: specimenDate,
                         confirmedCases: confirmedCases,
@@ -146,6 +149,9 @@ app.get("/results", function (req, res) {
             areaArea = filteredSum[0]['Area'];
             areaPopulation = filteredSum[0]['Population'];
             areaDeaths = filteredSum[0]['cumDeaths28DaysByDeathDate'];
+            totalVaccineFirstPerCent = filteredSum[0]['totalVaccineFirstPerCent'];
+            totalVaccineSecondPerCent = filteredSum[0]['totalVaccineSecondPerCent'];
+            rate = filteredSum[0]['rate'];
             res.render("results", {
                 specimenDate: specimenDate,
                 confirmedCases: confirmedCases,
@@ -168,7 +174,16 @@ app.get("/results", function (req, res) {
 
 
 app.get("/search", function (req, res) {
-    res.render("testSearch");
+    var url = "https://storage.googleapis.com/uk-covid19-data-store/lastRefresh.json";
+    request(url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log("reading inside!!");
+            console.log(body);
+            var data = JSON.parse(body);
+            var refreshTime = data["lastUpdatedAt"];
+            console.log(refreshTime[0]);
+        };
+    });
 });
 
 app.get("*", function (req, res) {

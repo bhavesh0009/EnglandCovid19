@@ -78,7 +78,7 @@
         </div>
     </div>
     <section id="cards">
-        <div class="container">
+        <div class="container mb-2">
             <div class="card-deck text-center">
                 <div class="card shadow-sm" id="mainCards">
                     <div class="card-header" id="mainCardHeader">
@@ -112,6 +112,34 @@
                         <h1 class="card-title pricing-card-title"><%= areaR%></h1>
                     </div>
                 </div>
+            </div>
+        </div>    
+        <div class="container">
+            <div class="card-deck text-center">
+                <div class="card shadow-sm" id="mainCards">
+                    <div class="card-header" id="mainCardHeader">
+                        <h4 class="my-0 font-weight-normal">Rate</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title"><%= rate%></h1>
+                    </div>
+                </div>
+                <div class="card shadow-sm" id="mainCards">
+                    <div class="card-header"  id="mainCardHeader">
+                        <h4 class="my-0 font-weight-normal">1st Dose %</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 id="firstVaccine" class="card-title pricing-card-title"><%= totalVaccineFirstPerCent%></h1>
+                    </div>
+                </div>
+                <div class="card shadow-sm" id="mainCards">
+                    <div class="card-header" id="mainCardHeader">
+                        <h4 class="my-0 font-weight-normal">2nd Dose %</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 id="secondVaccine" class="card-title pricing-card-title"><%= totalVaccineSecondPerCent%></h1>
+                    </div>
+                </div>                
                 <div class="card shadow-sm" id="mainCards" name="deathDiv">
                     <div class="card-header"  id="mainCardHeader">
                         <h4 class="my-0 font-weight-normal">Deaths</h4>
@@ -119,22 +147,13 @@
                     <div class="card-body">
                         <h1 id="deathH1" class="card-title pricing-card-title"><%= areaDeaths%></h1>
                     </div>
-                </div>             
+                </div>         
             </div>
-        </div>    
+        </div>   
     </section>
-    <div class="container my-2">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-gw-3+1f-3d+2z"
-            data-ad-client="ca-pub-3644243863892421"
-            data-ad-slot="5567378684"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>    
-    </div>    
+
+
+    
     <div class="container mb-0 mt-3">
         <nav class="nav nav-pills nav-justified bg-dark" style="color: #ffffff;">
             <a class="nav-item nav-link active" data-toggle="tab" href="#nav-30days">Last 30 Days</a>
@@ -266,18 +285,6 @@
            </script>        
         </div>        
     </div>
-    <div class="container  my-2">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-gw-3+1f-3d+2z"
-            data-ad-client="ca-pub-3644243863892421"
-            data-ad-slot="5567378684"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>    
-    </div>    
     <div id="msoaDetails">
         <div class="container">
             <div class="card mb-2" id="regionTitle">
@@ -310,19 +317,6 @@
     
         </div>
     </div>
-    <div class="container  my-2">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-gw-3+1f-3d+2z"
-            data-ad-client="ca-pub-3644243863892421"
-            data-ad-slot="5567378684"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>    
-    </div>
-
     <footer class="footer mt-auto py-3">
         <div class="container">
             <span class="text-muted">
@@ -333,6 +327,7 @@
                     <li>Scotland data is updated since 29th July,2020 only.</li>                
                     <li>Middle Super Output Area (MSOA) are small areas with around 7,200 average population. </li>
                     <li>datasets are filtered out where cases are less than 3 to prevent disclosure and protect privacy. Small area data risk disclosure when the numbers are too small.</li>
+                    <li>Vaccination uptake % is of total adult population.</li>                 
                     <li>Death = Total number of deaths since the start of the pandemic of people who had had a positive test result for COVID-19 and died within 28 days of the first positive test. 
                         The loss is unmeasurable. May their soul find peace and comfort. Keeping them in prayers.</li>
                 </ul>
@@ -346,8 +341,12 @@
         };
         var deathCount = <%- areaDeaths%>;
         if (deathCount == 0){
-            console.log(deathCount);
             document.getElementById("deathH1").innerHTML  = "NA";
+        };
+        var totalVaccineFirstPerCent = <%- totalVaccineFirstPerCent%>;
+        if (totalVaccineFirstPerCent == 0){
+            document.getElementById("firstVaccine").innerHTML  = "NA";
+            document.getElementById("secondVaccine").innerHTML  = "NA";
         };
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

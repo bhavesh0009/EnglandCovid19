@@ -94,7 +94,9 @@
                 el.rSecond14,
                 el.rFirst14,
                 el.rBasic,
-                el.relativeDiff]];
+                el.relativeDiff,
+                el.totalVaccineFirstPerCent,
+                el.totalVaccineSecondPerCent]];
             });
 
             $('#example').dataTable({
@@ -116,7 +118,9 @@
                     { "sTitle": "Rate First Fortnight" },
                     { "sTitle": "Rate Second Fortnight" },
                     { "sTitle": "Growth" },
-                    { "sTitle": "Relative Difference" }
+                    { "sTitle": "Relative Difference" },
+                    { "sTitle": "Vaccination 1st Dose %" },
+                    { "sTitle": "Vaccination 2nd Dose %" }
                 ]
             });
         });
@@ -129,7 +133,8 @@
                     <li>Source: <a href="https://coronavirus.data.gov.uk/">https://coronavirus.data.gov.uk/</a></li>
                     <li>Growth = total cases of last 14 days / total cases of 14 days prior to that period</li>
                     <li>Rates per 100,000 resident population</li>
-                    <li>Scotland data is updated since 29th July,2020 only.</li>                </ul>
+                    <li>Scotland data is updated since 29th July,2020 only.</li>
+                    <li>Vaccination uptake % is of total adult population.</li>                 </ul>
             </span>
         </div>
     </footer>
