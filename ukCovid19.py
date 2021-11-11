@@ -197,10 +197,10 @@ def processData(ltlasDf, population, lowerToUpperDf):
 
 
 def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWorst10RateLast30D, ltlasAllSumDf, lastRefresh,msoaDf):
-    #ltlasDf.to_csv('ltlas.csv')
+    ltlasDf.to_csv('ltlas.csv')
     ltlasDf.to_json(path_or_buf="data/ltlas.json",
                     orient="records", date_format='iso')
-    #ltlasSumDf.to_csv('ltlasSum.csv')
+    ltlasSumDf.to_csv('ltlasSum.csv')
     ltlasSumDf.to_json(path_or_buf="data/ltlasSum.json",
                        orient="records", date_format='iso')
     #ltlasWorst10Df.to_csv('ltlasWorst10Df.csv')
@@ -212,13 +212,13 @@ def exportData(ltlasDf, ltlasSumDf, ltlasWorst10Df, ltlastop10last30dDf, ltlasWo
     #ltlasWorst10RateLast30D.to_csv('ltlasWorst10RateLast30D.csv')
     ltlasWorst10RateLast30D.to_json(
         path_or_buf="data/ltlasWorst10RateLast30D.json", orient="records", date_format='iso')
-    #ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
+    ltlasAllSumDf.to_csv('ltlasAllSumDf.csv')
     ltlasAllSumDf.to_json(
         path_or_buf="data/ltlasAllSumDf.json", orient="records", date_format='iso')
     timestr = time.strftime("%Y%m%d-%H%M%S")
     msoaDf.to_json(
         path_or_buf=r"C:\Users\Projects\Documents\Archive\msoaDf_"+timestr+".json", orient="records", date_format='iso')        
-
+    msoaDf.to_csv('mosaDf.csv')
     msoaDf.to_json(
         path_or_buf="data/msoaDf.json", orient="records", date_format='iso')        
     lastRefresh.to_json(

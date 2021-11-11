@@ -20,9 +20,9 @@
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="">
+    <meta name="description" content="UK Covid Dashboad. Daily trend of Covid cases, deaths, vaccination of your local area.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>U.K. Covid-19 Dashboard</title>
+    <title>UK Covid Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="icon" href="/images/favicon_virus.ico">
@@ -40,27 +40,15 @@
             <a class="nav-item nav-link" href="/summary">Summary </a>
         </div>
     </nav>
-    <div class="container" id="jumboContainer">
-        <div class="jumbotron">
-            <h1 class="display-5">U.K. Covid-19 Dashboard</h1>
+    <div class="container " id="jumboContainer">
+        <div class="jumbotron py-2">
+            <h1 class="display-5">UK Covid Dashboard</h1>
             <p>Daily trend of Covid-19 for your area.</p>
             <p><em>Last Updated : <%= lastRefreshJSON[0].lastUpdatedAt.substring(0,19) %></em></p>
-                <p id="social-twitter">Follow me on twitter<a class="btn-floating btn-lg btn-tw" type="button" role="button" href="https://twitter.com/bhavesh_09"><i class="fab fa-twitter"></i></a></p>
-                <p id="social-wa">Share with Whatsapp<a class="btn-floating btn-lg btn-tw" type="button" role="button" href="whatsapp://send?text=Check Local Spread of Covid-19 https://ukcovid19.nw.r.appspot.com/" data-action="share/whatsapp/share"><i style="color:#25D366" class="fab fa-whatsapp"></i></a></p>
+                <p id="social-twitter">Follow me on twitter<a class="btn-floating btn-lg btn-tw py-lg-0" type="button" role="button" href="https://twitter.com/bhavesh_09"><i class="fab fa-twitter"></i></a></p>
+                <p id="social-wa">Share with Whatsapp<a class="btn-floating btn-lg btn-tw py-1" type="button" role="button" href="whatsapp://send?text=Check Local Spread of Covid-19 https://ukcovid19.nw.r.appspot.com/" data-action="share/whatsapp/share"><i style="color:#25D366" class="fab fa-whatsapp"></i></a></p>
             <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="bhavesh09" data-color="#FF5F5F" data-emoji=""  data-font="Cookie" data-text="Buy me a coffee" data-outline-color="#000" data-font-color="#fff" data-coffee-color="#fd0" ></script>            
         </div>
-    </div>
-    <div class="container my-2">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-gw-3+1f-3d+2z"
-            data-ad-client="ca-pub-3644243863892421"
-            data-ad-slot="5567378684"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>    
     </div>
     <div class="container">
         <form action="/results" method='GET'>
@@ -158,18 +146,6 @@
                 Areas</a>        
         </div>
     </div>
-    <div class="container  my-2">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-format="fluid"
-            data-ad-layout-key="-gw-3+1f-3d+2z"
-            data-ad-client="ca-pub-3644243863892421"
-            data-ad-slot="5567378684"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>    
-    </div>    
     <footer class="footer mt-auto py-3">
         <div class="container">
             <span class="text-muted">
